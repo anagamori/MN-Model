@@ -1,8 +1,8 @@
 
 I_Ca = -g_Ca_N*m_N_s_vec.^2.*h_N_s_vec.*(V_s-V_Ca);
 
-f = 1;
-alpha = 0.009*1000;
+f = 0.01;
+alpha = 0.9*1000;
 k_Ca = 2*1000;
 Ca = 0;
 
@@ -13,7 +13,7 @@ Ca_vec = zeros(1,length(time));
 for t = 1:length(time)
     dCa = f*(-alpha*I_Ca(t)-k_Ca*Ca);
     Ca = Ca+dCa/Fs;
-    Ca_vec(t) = Ca*0.01;
+    Ca_vec(t) = Ca;
 end
 
 I_K_Ca = g_K_Ca*(Ca_vec./(Ca_vec+K_d)).*(V_s-V_K);
