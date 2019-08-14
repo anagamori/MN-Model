@@ -5,7 +5,7 @@
 % Descriptions:
 %==========================================================================
 
-function [binary,V_s,V_d] = Booth1997_function(time,input,Fs,pltOpt)
+function [binary,V_s,V_d] = Booth1997_function(time,input,Fs,noise_amp,pltOpt)
 
 step = 1/Fs;
 
@@ -72,10 +72,13 @@ binary = zeros(1,length(time));
 
 x_noise = 0;
 x_noise_vec = zeros(1,length(time));
+
+I_app_vec = zeros(1,length(time));
+
 %%
 for t = 1:length(time)
-    %[x_noise] = noise(x_noise,0.1,Fs);
-    I_app = input(t); % + input(t)*sum(x_noise);
+    [x_noise] = noise(x_noise,noise_amp,Fs);
+    I_app = input(t) + input(t)*x_noise; % + input(t)*sum(x_noise);
     m_inf_1 = m_inf;
     m_inf = 1/(1+exp((V_s-theta_m)/k_m));
     %%
@@ -133,6 +136,7 @@ for t = 1:length(time)
     
     x_noise_vec(t) = x_noise;
     
+    I_app_vec(t) = I_app;
     if m_inf > 0.95 && m_inf_1 < 0.95
         binary(t) = 1;
     end
@@ -140,14 +144,14 @@ end
 
 %%
 figure(1)
-subplot(3,1,1)
-plot(time,input,'LineWidth',1,'Color','k')
+ax1 = subplot(3,1,1);
+plot(time,I_app_vec,'LineWidth',1,'Color','k')
 xlabel('Time (s)')
 ylabel({'Applied current';'(\muA/cm^2)'})
 set(gca,'TickDir','out');
 set(gca,'box','off')
 ax = gca;
-subplot(3,1,2)
+ax2 = subplot(3,1,2);
 plot(time,V_s_vec,'LineWidth',1,'Color','k')
 hold on 
 plot(time,binary*50,'LineWidth',1,'Color','b')
@@ -156,13 +160,14 @@ ylabel({'Soma potential';'(mV)'})
 set(gca,'TickDir','out');
 set(gca,'box','off')
 ax = gca;
-subplot(3,1,3)
+ax3 = subplot(3,1,3);
 plot(time,V_d_vec,'LineWidth',1,'Color','k')
 xlabel('Time (s)')
 ylabel({'Dendritic potential';'(mV)'})
 set(gca,'TickDir','out');
 set(gca,'box','off')
 ax = gca;
+linkaxes([ax1,ax2,ax3],'x')
 
 if pltOpt == 1
     figure(2)
@@ -333,7 +338,7 @@ end
     end
     function [x] = noise(x,D,Fs)
         tau = 0.005; 
-        chi = normrnd(0,1,[1,size(x,2)]);
+        chi = normrnd(0,1,[1,1]);
         x_dot = -x/tau + sqrt(D)*chi;
         x = x_dot*1/Fs + x;
     end
