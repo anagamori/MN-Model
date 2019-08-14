@@ -74,8 +74,8 @@ x_noise = 0;
 x_noise_vec = zeros(1,length(time));
 %%
 for t = 1:length(time)
-    [x_noise] = noise(x_noise,0.1,Fs);
-    I_app = input(t) + input(t)*sum(x_noise);
+    %[x_noise] = noise(x_noise,0.1,Fs);
+    I_app = input(t); % + input(t)*sum(x_noise);
     m_inf_1 = m_inf;
     m_inf = 1/(1+exp((V_s-theta_m)/k_m));
     %%
@@ -141,7 +141,7 @@ end
 %%
 figure(1)
 subplot(3,1,1)
-plot(time,I_app,'LineWidth',1,'Color','k')
+plot(time,input,'LineWidth',1,'Color','k')
 xlabel('Time (s)')
 ylabel({'Applied current';'(\muA/cm^2)'})
 set(gca,'TickDir','out');
