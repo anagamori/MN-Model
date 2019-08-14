@@ -7,7 +7,6 @@
 
 function [binary,V_s,V_d] = Booth1997_function(time,input,Fs,pltOpt)
 
-I_app = input;
 step = 1/Fs;
 
 %%
@@ -70,18 +69,23 @@ Ca_s_vec =  zeros(1,length(time));
 Ca_d_vec =  zeros(1,length(time));
 
 binary = zeros(1,length(time));
+
+x_noise = 0;
+x_noise_vec = zeros(1,length(time));
 %%
 for t = 1:length(time)
+    [x_noise] = noise(x_noise,0.1,Fs);
+    I_app = input(t) + input(t)*sum(x_noise);
     m_inf_1 = m_inf;
     m_inf = 1/(1+exp((V_s-theta_m)/k_m));
     %%
-    k_1_s = f_dV_s(V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app(t));
+    k_1_s = f_dV_s(V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
     y_1_s = V_s + k_1_s*step/2;
-    k_2_s = f_dV_s(y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app(t));
+    k_2_s = f_dV_s(y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
     y_2_s = V_s + k_2_s*step/2;
-    k_3_s = f_dV_s(y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app(t));
+    k_3_s = f_dV_s(y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
     y_3_s = V_s + k_3_s*step/2;
-    k_4_s = f_dV_s(y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app(t));
+    k_4_s = f_dV_s(y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
     V_s = V_s + step/6*(k_1_s+2*k_2_s+2*k_3_s+k_4_s);
     
     %%
@@ -126,6 +130,8 @@ for t = 1:length(time)
     m_L_vec(t) = m_L;
     Ca_s_vec(t) = Ca_s;
     Ca_d_vec(t) = Ca_d;
+    
+    x_noise_vec(t) = x_noise;
     
     if m_inf > 0.99 && m_inf_1 < 0.95
         binary(t) = 1;
@@ -323,5 +329,10 @@ end
             - I_L + I_c)*1000;
         
     end
-
+    function [x] = noise(x,D,Fs)
+        tau = 0.005; 
+        chi = normrnd(0,1,[1,size(x,2)]);
+        x_dot = -x/tau + sqrt(D)*chi;
+        x = x_dot*1/Fs + x;
+    end
 end
