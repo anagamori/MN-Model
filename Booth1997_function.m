@@ -133,7 +133,7 @@ for t = 1:length(time)
     
     x_noise_vec(t) = x_noise;
     
-    if m_inf > 0.99 && m_inf_1 < 0.95
+    if m_inf > 0.95 && m_inf_1 < 0.95
         binary(t) = 1;
     end
 end
@@ -149,6 +149,8 @@ set(gca,'box','off')
 ax = gca;
 subplot(3,1,2)
 plot(time,V_s_vec,'LineWidth',1,'Color','k')
+hold on 
+plot(time,binary*50,'LineWidth',1,'Color','b')
 xlabel('Time (s)')
 ylabel({'Soma potential';'(mV)'})
 set(gca,'TickDir','out');
