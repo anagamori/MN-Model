@@ -61,7 +61,7 @@ step = 1/Fs;
 time = 0:1/Fs:2;
 I_app = zeros(1,length(time)); % applied current (microA/cm^2)
 
-I_app(0.5*Fs:end) = 15;
+I_app(0.5*Fs:end) = 6;
 
 %% 
 V_s_vec =  zeros(1,length(time));
@@ -114,7 +114,7 @@ for t = 1:length(time)
     m_N_s = conductance_kinetics(m_N_s,V_s,tau_m_N,theta_m_N,k_m_N,Fs);
     h_N_s = conductance_kinetics(h_N_s,V_s,tau_h_N,theta_h_N,k_h_N,Fs);    
     
-    I_Ca_s = -g_Ca_N_s*m_N_s^2*h_N_s*(V_s-V_Ca);
+    I_Ca_s = g_Ca_N_s*m_N_s^2*h_N_s*(V_s-V_Ca);
     Ca_s = calcium_concentration(Ca_s,I_Ca_s,Fs);
     
     
@@ -123,7 +123,7 @@ for t = 1:length(time)
     h_N_d = conductance_kinetics(h_N_d,V_d,tau_h_N,theta_h_N,k_h_N,Fs);
     m_L = conductance_kinetics(m_L,V_d,tau_m_L,theta_m_L,k_m_L,Fs);
     
-    I_Ca_d = -g_Ca_N_d*m_N_d^2*h_N_d*(V_d-V_Ca) - g_Ca_L*m_L*(V_d-V_Ca);
+    I_Ca_d = g_Ca_N_d*m_N_d^2*h_N_d*(V_d-V_Ca) + g_Ca_L*m_L*(V_d-V_Ca);
     Ca_d = calcium_concentration(Ca_d,I_Ca_d,Fs);
     
     V_s_vec(t) = V_s;
@@ -268,7 +268,7 @@ function Ca = calcium_concentration(Ca,I_Ca,Fs)
  alpha = 0.009*1000; %(mol/C/microm)
  k_Ca = 2*1000; %(s)
  
- dCa = f*(alpha*I_Ca - k_Ca*Ca);
+ dCa = f*(-alpha*I_Ca - k_Ca*Ca);
  Ca = dCa*1/Fs + Ca;
 
 end
@@ -286,7 +286,7 @@ g_Ca_N = 14; %(mS/cm^2)
 g_K_Ca = 5; %(mS/cm^2)
 g_L = 0.51; %(mS/cm^2)
 g_c = 0.1; %coupling conductance (mS/cm^2)
-p = 0.04; %the ratio of somatic surface area to toal cell surface area
+p = 0.1; %the ratio of somatic surface area to toal cell surface area
 K_d = 0.2; %(microM)
 
 C_m = 1; %(microF/cm^2)
