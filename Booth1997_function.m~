@@ -282,7 +282,7 @@ end
         g_Na_f = 120; %(mS/cm^2)
         g_K_dr_f = 100; %(mS/cm^2)
         g_Ca_N_f = 14; %(mS/cm^2)
-        g_K_Ca_f = 5; %3.136; %(mS/cm^2)
+        g_K_Ca_f = 5;3.136; %(mS/cm^2)
         g_L_f = 0.51; %(mS/cm^2)
         g_c_f = 0.1; %coupling conductance (mS/cm^2)
         p_f = 0.1; %the ratio of somatic surface area to toal cell surface area
