@@ -7,13 +7,13 @@ Fs = 30000;
 step = 1/Fs;
 time = 0:1/Fs:5;
 
-I_amp = 10; %3:0.1:30;
+I_amp = 18.5; %3:0.1:30;
 
 for i = 1:length(I_amp)
 I_input = zeros(1,length(time)); % applied current (microA/cm^2)
 I_input(1*Fs:3*Fs) = I_amp(i);
 
-noise_amp = 0; %100000;
+noise_amp = 100000;
 
 %%
 [binary,V_s,V_d] = Booth1997_function(time,I_input,Fs,noise_amp,1);

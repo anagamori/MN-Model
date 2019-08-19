@@ -5,12 +5,12 @@ clc
 %%
 Fs = 30000;
 time = 0:1/Fs:5;
-noise_amp = 100000;
+noise_amp = 0; %100000;
 
 %% Test Izhikevich
 amp_vec = 10;
 I_input = [zeros(1,1*Fs) amp_vec*[0:1/Fs:1] amp_vec*ones(1,length(time)-1*Fs-length(amp_vec*[0:1/Fs:1]))];
-sine_wave = 1*sin(2*pi*1*[0:1/Fs:3]);  
+sine_wave = 1*sin(2*pi*5*[0:1/Fs:3]);  
 I_input(end-length(sine_wave)+1:end) = I_input(end-length(sine_wave)+1:end) + sine_wave;
 % I_input = zeros(1,length(time)); % applied current (microA/cm^2)
 % I_input(0.5*Fs:end) = amp_vec;
