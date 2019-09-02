@@ -5,7 +5,7 @@
 % Descriptions:
 %==========================================================================
 
-function [binary,V_s,V_d] = Cisi2008_function(param,time,input,Fs,noise_amp,inputOpt,pltOpt)
+function [binary,V_s_vec,V_d_vec] = Cisi2008_function(param,time,input,Fs,noise_amp,inputOpt,pltOpt)
 
 step = 1/Fs;
 
