@@ -41,7 +41,7 @@ param.beta_q = 0.025*1000;
 amp_vec = 15:50;
 for i = 1:length(amp_vec)
     i
-    Fs = 50000;
+    Fs = 10000;
     time = 0:1/Fs:5;
     noise_amp = 0;
     
@@ -60,8 +60,8 @@ for i = 1:length(amp_vec)
     CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
 end
 index_t = find(~isnan(mean_FR));
-amp_vec(index_t)
-mean_FR(index_t)
+amp_vec(index_t(1))
+mean_FR(index_t(1))
 
 figure(1)
 plot(amp_vec,mean_FR,'LineWidth',1)
