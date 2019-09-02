@@ -39,7 +39,8 @@ param.beta_q = 0.025*1000;
 
 %%
 amp_vec = 15:50;
-for i = 1:length(amp)
+for i = 1:length(amp_vec)
+    i
     Fs = 50000;
     time = 0:1/Fs:5;
     noise_amp = 0;
