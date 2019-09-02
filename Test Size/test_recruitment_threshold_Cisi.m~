@@ -39,8 +39,9 @@ param.beta_q = 0.025*1000;
 
 %%
 amp_vec = 15:50;
-for i = 1:length(amp)
-    Fs = 50000;
+for i = 1:length(amp_vec)
+    i
+    Fs = 10000;
     time = 0:1/Fs:5;
     noise_amp = 0;
     
@@ -59,9 +60,16 @@ for i = 1:length(amp)
     CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
 end
 index_t = find(~isnan(mean_FR));
-amp_vec(
+amp_vec(index_t(1))
+mean_FR(index_t(1))
+
+area_s = 2*pi*param.l_s*param.r_s;
+current = amp_vec*area_s;
+
+p = polyfit(current(index_t(10):end),mean_FR(index_t(10):end),1);
+ = polyval(p,x1);
 
 figure(1)
-plot(amp_vec,mean_FR,'LineWidth',1)
-xlabel('Injected Current (nA/cm^2)')
+plot(current,'LineWidth',2)
+xlabel('Injected Current (nA)')
 ylabel('Dischage Rate (Hz)')

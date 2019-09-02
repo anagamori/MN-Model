@@ -63,7 +63,17 @@ index_t = find(~isnan(mean_FR));
 amp_vec(index_t(1))
 mean_FR(index_t(1))
 
+area_s = 2*pi*param.l_s*param.r_s;
+current = amp_vec*area_s;
+
+p = polyfit(current(index_t(10):end),mean_FR(index_t(10):end),1)
+y1 = polyval(p,current);
+
 figure(1)
-plot(amp_vec,mean_FR,'LineWidth',1)
-xlabel('Injected Current (nA/cm^2)')
-ylabel('Dischage Rate (Hz)')
+plot(current,mean_FR,'LineWidth',2)
+hold on
+plot(current,mean_FR,'--k','LineWidth',1)
+xlabel('Injected Current (nA)','FontSize',14)
+ylabel('Dischage Rate (Hz)','FontSize',14)
+set(gca,'TickDir','out');
+set(gca,'box','off')

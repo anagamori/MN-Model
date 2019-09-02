@@ -38,7 +38,7 @@ param.alpha_q = 1.5*1000;
 param.beta_q = 0.025*1000;
 
 %%
-Fs = 50000;
+Fs = 10000;
 time = 0:1/Fs:5;
 noise_amp = 0;
 
