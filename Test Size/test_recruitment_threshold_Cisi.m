@@ -61,14 +61,14 @@ for i = 1:length(amp_vec)
 end
 %%
 index_t = find(~isnan(mean_FR));
-amp_vec(index_t(1))
-mean_FR(index_t(1))
-
 area_s = 2*pi*param.l_s*param.r_s;
 current = amp_vec*area_s*10^3;
 
-p = polyfit(current(index_t(5):end),mean_FR(index_t(5):end),1)
-y1 = polyval(p,current(index_t));
+current_th = current(index_t(1))
+min_DR = mean_FR(index_t(1))
+
+p_fit = polyfit(current(index_t(10):end),mean_FR(index_t(10):end),1)
+y1 = polyval(p_fit,current(index_t));
 
 figure(1)
 plot(current,mean_FR,'LineWidth',2)
