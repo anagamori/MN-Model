@@ -38,7 +38,7 @@ param.alpha_q = 1.5*1000;
 param.beta_q = 0.025*1000;
 
 %%
-amp_vec = 15:50;
+amp_vec = 15:70;
 for i = 1:length(amp_vec)
     i
     Fs = 10000;
@@ -59,20 +59,21 @@ for i = 1:length(amp_vec)
     mean_FR(i) = mean(1./ISI*1000);
     CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
 end
+%%
 index_t = find(~isnan(mean_FR));
 amp_vec(index_t(1))
 mean_FR(index_t(1))
 
 area_s = 2*pi*param.l_s*param.r_s;
-current = amp_vec*area_s;
+current = amp_vec*area_s*10^3;
 
-p = polyfit(current(index_t(10):end),mean_FR(index_t(10):end),1)
-y1 = polyval(p,current);
+p = polyfit(current(index_t(5):end),mean_FR(index_t(5):end),1)
+y1 = polyval(p,current(index_t));
 
 figure(1)
 plot(current,mean_FR,'LineWidth',2)
 hold on
-plot(current,mean_FR,'--k','LineWidth',1)
+plot(current(index_t),y1,'--k','LineWidth',1)
 xlabel('Injected Current (nA)','FontSize',14)
 ylabel('Dischage Rate (Hz)','FontSize',14)
 set(gca,'TickDir','out');
