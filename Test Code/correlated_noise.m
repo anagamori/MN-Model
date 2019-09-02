@@ -1,7 +1,7 @@
 %==========================================================================
-% point_conductance_model.m
+% correlated_noise.m
 % Author: Akira Nagamori
-% Last update: 8/14/19
+% Last update: 8/27/19
 % Descriptions:
 %   Equations obtained from Destexhe et al. (2001)
 %==========================================================================
@@ -12,23 +12,22 @@ clc
 
 %%
 Fs = 10000;
-time = 0:1/Fs:20;
-noise_amp = 5000;
-
-E_e = 0;
-E_i = -75;
-g_e0 = 0.012;
-g_e = 0;
-g_i0 = 0.057;
-g_i = 0;
+time = 0:1/Fs:3;
+noise_amp = 4000;
+n_elem = 2000;
+I_e = zeros(n_elem,1);
+I_i = zeros(n_elem,1);
 tau_e = 0.0027;
 tau_i = 0.0105;
 
 V = -65;
 
 I_syn_vec = zeros(1,length(time));
-x_e = normrnd(0,1,[1,length(time)]);
-x_i = normrnd(0,1,[1,length(time)]);
+
+sine = 0.003*sin(2*pi*1*time);
+
+x_e = normrnd(0,1,[n_elem,length(time)]);
+x_i = normrnd(0,1,[n_elem,length(time)]);
 
 %% Izhikevich model
 amp_vec = 10;
@@ -65,7 +64,7 @@ v_vec = zeros(1,length(time));
 
 %%
 for t = 1:length(time)
-    I_syn = g_e*(V-E_e) + g_i*(V-E_i);
+    I_syn = sum(I_e); % + sum(I_i); %*(V-E_e) + g_i*(V-E_i);
     
     if v >= 30
         binary(t) = 1;
@@ -73,7 +72,7 @@ for t = 1:length(time)
         u = u +d;
     end
     
-    v_dot = (alpha*v.^2+beta*v+gamma-u-(I_syn));
+    v_dot = (alpha*v.^2+beta*v+gamma-u+I_syn);
     v = v_dot*1000/Fs + v;
     
     u_dot = a.*(b.*v-u);
@@ -81,12 +80,12 @@ for t = 1:length(time)
     
     v_vec(t) = v;
     
-    dg_e = -1/tau_e*(g_e-g_e0) + sqrt(noise_amp)*x_e(t);
-    g_e = dg_e/Fs + g_e;
+    dI_e = -1/tau_e*I_e + sqrt(noise_amp)*x_e(:,t);
+    I_e = dI_e/Fs + I_e;
     
-    dg_i = -1/tau_i*(g_i-g_e0) + sqrt(noise_amp)*x_i(t);
-    g_i = dg_i/Fs + g_i;
-    
+    dI_i = -1/tau_i*I_i + sqrt(noise_amp)*x_i(:,t);
+    I_i = dI_i/Fs + I_i;
+        
     I_syn_vec(t) = I_syn;
 end
 
@@ -99,19 +98,3 @@ linkaxes([ax1,ax2],'x')
 set(gca,'TickDir','out');
 set(gca,'box','off')
 ax = gca;
-
-
-spike_time = find(binary);
-ISI = diff(spike_time)/(Fs/1000);
-mean_FR = mean(1./ISI*1000)
-CoV_FR = std(1./ISI*1000)/mean_FR*100
-
-temp = ISI(1:end-1);
-temp2 = ISI(2:end);
-R = corrcoef(temp,temp2)
-
-figure(2)
-for i = 1:length(ISI)-1
-    scatter(ISI(i),ISI(i+1),'b')
-    hold on
-end

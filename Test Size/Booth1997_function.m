@@ -5,7 +5,7 @@
 % Descriptions:
 %==========================================================================
 
-function [binary,V_s,V_d] = Booth1997_function(param_s,param_d,time,input,Fs,noise_amp,pltOpt)
+function [binary,V_s,V_d] = Booth1997_function(param_s,param_d,time,input,Fs,noise_amp,inputOpt,pltOpt)
 
 step = 1/Fs;
 
@@ -71,34 +71,35 @@ Ca_d_vec =  zeros(1,length(time));
 binary = zeros(1,length(time));
 
 x_noise = 0;
+chi = normrnd(0,1,[1,length(time)]);
 x_noise_vec = zeros(1,length(time));
 
 I_app_vec = zeros(1,length(time));
 
 %%
 for t = 1:length(time)
-    [x_noise] = noise(x_noise,noise_amp,Fs);
+    [x_noise] = noise(x_noise,noise_amp,chi(t),Fs);
     I_app = input(t) + input(t)*x_noise; % + input(t)*sum(x_noise);
     V_s_1 = V_s;
     m_inf = 1/(1+exp((V_s-theta_m)/k_m));
     %%
-    k_1_s = f_dV_s(param_s,V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_1_s = f_dV_s(param_s,V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_1_s = V_s + k_1_s*step/2;
-    k_2_s = f_dV_s(param_s,y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_2_s = f_dV_s(param_s,y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_2_s = V_s + k_2_s*step/2;
-    k_3_s = f_dV_s(param_s,y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_3_s = f_dV_s(param_s,y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_3_s = V_s + k_3_s*step/2;
-    k_4_s = f_dV_s(param_s,y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_4_s = f_dV_s(param_s,y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     V_s = V_s + step/6*(k_1_s+2*k_2_s+2*k_3_s+k_4_s);
     
     %%
-    k_1_d = f_dV_d(param_d,V_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_1_d = f_dV_d(param_d,V_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_1_d = V_d + k_1_d*step/2;
-    k_2_d = f_dV_d(param_d,y_1_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_2_d = f_dV_d(param_d,y_1_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_2_d = V_d + k_2_d*step/2;
-    k_3_d = f_dV_d(param_d,y_2_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_3_d = f_dV_d(param_d,y_2_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_3_d = V_d + k_3_d*step/2;
-    k_4_d = f_dV_d(param_d,y_3_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_4_d = f_dV_d(param_d,y_3_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     V_d = V_d + step/6*(k_1_d+2*k_2_d+2*k_3_d+k_4_d);
     %% State variables for ionic conductances
     
@@ -123,6 +124,7 @@ for t = 1:length(time)
     
     V_s_vec(t) = V_s;
     V_d_vec(t) = V_d;
+    
     m_inf_vec(t) =  m_inf;
     h_vec(t) =  h;
     n_vec(t) =  n;
@@ -137,7 +139,7 @@ for t = 1:length(time)
     x_noise_vec(t) = x_noise;
     
     I_app_vec(t) = I_app;
-    if V_s > 48 && V_s_1 < 48
+    if V_s > 0 && V_s_1 < 0
         binary(t) = 1;
     end
 end
@@ -170,7 +172,13 @@ if pltOpt == 1
     ax = gca;
     linkaxes([ax1,ax2,ax3],'x')
     
-    end
+    figure(2)
+    plot(time,m_inf_vec)
+    hold on
+    plot(time,h_vec)
+    plot(time,n_vec)
+    legend('m','h','n')
+end
 %%
     function tau_h = time_constant_h(V)
         tau_h = 30/(exp((V+50)/15) + exp(-(V+50)/16));
@@ -182,8 +190,7 @@ if pltOpt == 1
         tau_n = tau_n/1000;
     end
 
-    function w = conductance_kinetics(w,V,tau_w,theta_w,k_w,Fs)
-        
+    function w = conductance_kinetics(w,V,tau_w,theta_w,k_w,Fs)        
         w_inf = 1/(1+exp((V-theta_w)/k_w));
         dw = (w_inf - w)/tau_w;
         w = dw*1/Fs + w;
@@ -200,7 +207,7 @@ if pltOpt == 1
         
     end
 
-    function dx = f_dV_s(param_s,V_s,V_d,h,n,m_N,h_N,Ca,I_app)        
+    function dx = f_dV_s(param_s,V_s,V_d,h,n,m_N,h_N,Ca,I_app,inputOpt)        
         %%
         m_inf_f = 1/(1+exp((V_s-param_s.theta_m_f)/param_s.k_m_f));
         
@@ -213,12 +220,17 @@ if pltOpt == 1
         I_L = param_s.g_L_f*(V_s-param_s.V_L_f); % leak conductance
         I_c = param_s.g_c_f/param_s.p_f*(V_d-V_s);
         %%
-        dx = 1/param_s.C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
-            - I_L - I_K_Ca + I_c + I_app)*1000; %
+        if inputOpt == 1
+            dx = 1/param_s.C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
+                - I_L - I_K_Ca + I_c + I_app)*1000; %
+        else
+            dx = 1/param_s.C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
+                - I_L - I_K_Ca + I_c)*1000; %
+        end
         
     end
 
-    function dx = f_dV_d(param_d,V_d,V_s,m_N,h_N,m_L,Ca)
+    function dx = f_dV_d(param_d,V_d,V_s,m_N,h_N,m_L,Ca,I_app,inputOpt)
         %%
         I_Ca_N = param_d.g_Ca_N_f*m_N^2*h_N*(V_d-param_d.V_Ca_f); % inactivating, high-threshold, N-like calcium conductance
         I_K_Ca = param_d.g_K_Ca_f*(Ca/(Ca+param_d.K_d_f))*(V_d-param_d.V_K_f); % calcium-dependent potassium conductance
@@ -227,13 +239,17 @@ if pltOpt == 1
         I_c = param_d.g_c_f/(1-param_d.p_f)*(V_s-V_d);
         
         %%
-        dx = 1/param_d.C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
-            - I_L + I_c)*1000;
+        if inputOpt == 1
+            dx = 1/param_d.C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
+                - I_L + I_c)*1000;
+        else
+            dx = 1/param_d.C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
+                - I_L + I_c + I_app)*1000;
+        end
         
     end
-    function [x] = noise(x,D,Fs)
+    function [x] = noise(x,D,chi,Fs)
         tau = 0.005; 
-        chi = normrnd(0,1,[1,1]);
         x_dot = -x/tau + sqrt(D)*chi;
         x = x_dot*1/Fs + x;
     end

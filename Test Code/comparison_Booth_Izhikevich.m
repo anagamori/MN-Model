@@ -4,11 +4,11 @@ clc
 
 %%
 Fs = 30000;
-time = 0:1/Fs:5;
+time = 0:1/Fs:10;
 noise_amp = 50000;
 
 %% Test Izhikevich
-amp_vec = 10;
+amp_vec = 5;
 I_input = [zeros(1,1*Fs) amp_vec*[0:1/Fs:1] amp_vec*ones(1,length(time)-1*Fs-length(amp_vec*[0:1/Fs:1]))];
    
 % I_input = zeros(1,length(time)); % applied current (microA/cm^2)
@@ -27,27 +27,36 @@ parameter.gamma = 140;
 
 [v_vec,binary] = Izhikevich(time,I_input,parameter,Fs,noise_amp);
 
-figure(11)
-plot(time,v_vec,'LineWidth',1,'Color','k')
-hold on 
-plot(time,binary*50,'LineWidth',1,'Color','b')
-xlabel('Time (s)')
-ylabel({'Membrane potential';'(mV)'})
-set(gca,'TickDir','out');
-set(gca,'box','off')
-ax = gca;
-
-spike_time = find(binary(1*Fs+3:end));
+spike_time = find(binary(end-2*Fs+1:end));
 ISI = diff(spike_time)/(Fs/1000);
 mean_FR = mean(1./ISI*1000)
 CoV_FR = std(1./ISI*1000)/mean_FR*100
 
+temp = ISI(1:end-1);
+temp2 = ISI(2:end);
+[R,P] = corrcoef(temp,temp2)
+
+figure(1)
+for i = 1:length(ISI)-1
+    scatter(ISI(i),ISI(i+1),'b')
+    hold on
+end
 %% Test Booth_1997
 clear binary
 
 [binary,V_s,V_d] = Booth1997_function(time,I_input,Fs,noise_amp,0);
  
-spike_time = find(binary(1*Fs+3:end));
+spike_time = find(binary(end-2*Fs+1:end));
 ISI = diff(spike_time)/(Fs/1000);
 mean_FR = mean(1./ISI*1000)
 CoV_FR = std(1./ISI*1000)/mean_FR*100
+
+temp = ISI(1:end-1);
+temp2 = ISI(2:end);
+[R,P] = corrcoef(temp,temp2)
+
+figure(1)
+for i = 1:length(ISI)-1
+    scatter(ISI(i),ISI(i+1),'r+')
+    hold on
+end

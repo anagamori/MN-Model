@@ -5,7 +5,7 @@
 % Descriptions:
 %==========================================================================
 
-function [binary,V_s,V_d] = Booth1997_function(time,input,Fs,noise_amp,pltOpt)
+function [binary,V_s,V_d] = Booth1997_function(time,input,Fs,noise_amp,inputOpt,pltOpt)
 
 step = 1/Fs;
 
@@ -52,7 +52,8 @@ m_L = 0.083;
 Ca_s = 0.001;
 Ca_d = 0.17;
 
-
+%%
+chi = normrnd(0,1,[1,length(time)]);
 %%
 V_s_vec =  zeros(1,length(time));
 V_d_vec =  zeros(1,length(time));
@@ -77,28 +78,28 @@ I_app_vec = zeros(1,length(time));
 
 %%
 for t = 1:length(time)
-    [x_noise] = noise(x_noise,noise_amp,Fs);
+    [x_noise] = noise(x_noise,noise_amp,chi(t),Fs);
     I_app = input(t) + input(t)*x_noise; % + input(t)*sum(x_noise);
     m_inf_1 = m_inf;
     m_inf = 1/(1+exp((V_s-theta_m)/k_m));
     %%
-    k_1_s = f_dV_s(V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_1_s = f_dV_s(V_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_1_s = V_s + k_1_s*step/2;
-    k_2_s = f_dV_s(y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_2_s = f_dV_s(y_1_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_2_s = V_s + k_2_s*step/2;
-    k_3_s = f_dV_s(y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_3_s = f_dV_s(y_2_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     y_3_s = V_s + k_3_s*step/2;
-    k_4_s = f_dV_s(y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app);
+    k_4_s = f_dV_s(y_3_s,V_d,h,n,m_N_s,h_N_s,Ca_s,I_app,inputOpt);
     V_s = V_s + step/6*(k_1_s+2*k_2_s+2*k_3_s+k_4_s);
     
     %%
-    k_1_d = f_dV_d(V_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_1_d = f_dV_d(V_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_1_d = V_d + k_1_d*step/2;
-    k_2_d = f_dV_d(y_1_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_2_d = f_dV_d(y_1_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_2_d = V_d + k_2_d*step/2;
-    k_3_d = f_dV_d(y_2_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_3_d = f_dV_d(y_2_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     y_3_d = V_d + k_3_d*step/2;
-    k_4_d = f_dV_d(y_3_d,V_s,m_N_d,h_N_d,m_L,Ca_d);
+    k_4_d = f_dV_d(y_3_d,V_s,m_N_d,h_N_d,m_L,Ca_d,I_app,inputOpt);
     V_d = V_d + step/6*(k_1_d+2*k_2_d+2*k_3_d+k_4_d);
     %% State variables for ionic conductances
     
@@ -272,7 +273,7 @@ end
         
     end
 
-    function dx = f_dV_s(x,y,h,n,m_N,h_N,Ca,I_app)
+    function dx = f_dV_s(x,y,h,n,m_N,h_N,Ca,I_app,inputOpt)
         %%
         V_Na_f = 55; %(mV)
         V_K_f = -80; %(mV)
@@ -305,12 +306,17 @@ end
         I_L = g_L_f*(x-V_L_f); % leak conductance
         I_c = g_c_f/p_f*(y-x);
         %%
-        dx = 1/C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
-            - I_L - I_K_Ca + I_c + I_app)*1000; %
+        if inputOpt == 1
+            dx = 1/C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
+                - I_L - I_K_Ca + I_c + I_app)*1000; %
+        else
+            dx = 1/C_m_f*(-I_Na - I_K_dr - I_Ca_N ...
+                - I_L - I_K_Ca + I_c)*1000; %
+        end
         
     end
 
-    function dx = f_dV_d(x,y,m_N,h_N,m_L,Ca)
+    function dx = f_dV_d(x,y,m_N,h_N,m_L,Ca,I_app,inputOpt)
         %%
         V_K_f = -80; %(mV)
         V_Ca_f = 80; %(mV)
@@ -333,13 +339,17 @@ end
         I_c = g_c_f/(1-p_f)*(y-x);
         
         %%
-        dx = 1/C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
-            - I_L + I_c)*1000;
+        if inputOpt == 1
+            dx = 1/C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
+                - I_L + I_c)*1000;
+        else
+            dx = 1/C_m_f*(-I_Ca_N - I_Ca_L - I_K_Ca...
+                - I_L + I_c + I_app)*1000;
+        end
         
     end
-    function [x] = noise(x,D,Fs)
+    function [x] = noise(x,D,chi,Fs)
         tau = 0.005; 
-        chi = normrnd(0,1,[1,1]);
         x_dot = -x/tau + sqrt(D)*chi;
         x = x_dot*1/Fs + x;
     end
