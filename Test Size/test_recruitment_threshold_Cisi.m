@@ -3,11 +3,11 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Test Size';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
 %%
-type = 'S';
+type = 'F';
 nMN = '1';
 
 cd(data_folder)
@@ -15,7 +15,7 @@ load([type '_' nMN])
 cd(code_folder)
 
 %%
-amp_vec = 15:70;
+amp_vec = 150:250;
 for i = 1:length(amp_vec)
     i
     Fs = 10000;

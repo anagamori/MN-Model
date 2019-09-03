@@ -3,22 +3,22 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Test Size';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
 %%
-type = 'S';
+type = 'F';
 nMN = '1';
 
 cd(data_folder)
 load([type '_' nMN])
 cd(code_folder)
 %%
-Fs = 100000;
+Fs = 50000;
 time = 0:1/Fs:5;
 noise_amp = 0;
 
-amp_vec = 22;
+amp_vec = 151;
 input  = zeros(1,length(time));
 input(1*Fs+1:1.2*Fs) = amp_vec;
 
@@ -32,7 +32,7 @@ V_base = V_s(spike_time(1)-1);
 [~,loc] = min(abs(V_s(spike_time(1):spike_time(2))-V_base));
 V_return = V_s(spike_time(1)+loc);
 AHP_duration = loc/(Fs/1000)
-AHP_mag = min(V_s(spike_time(1):spike_time(2)))
+AHP_mag = min(V_s(spike_time(1):spike_time(2)))-V_base
 
 %%
 amp_vec = 10;

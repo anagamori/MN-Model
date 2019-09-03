@@ -3,11 +3,11 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Test Size';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
 %%
-model_folder = '/Users/akiranagamori/Documents/GitHub/Twitch-Based-Muscle-Model/Model Parameters/Model_8';
+model_folder = '/Users/akira/Documents/GitHub/Twitch-Based-Muscle-Model/Model Parameters/Model_8';
 cd(model_folder)
 load('modelParameter')
 cd(code_folder)
@@ -64,3 +64,14 @@ xlabel('Injected Current (nA)','FontSize',14)
 ylabel('Dischage Rate (Hz)','FontSize',14)
 set(gca,'TickDir','out');
 set(gca,'box','off')
+
+figure(2)
+plot(amp_vec,mean_FR,'LineWidth',2)
+hold on
+plot([min(amp_vec) max(amp_vec)],[MDR MDR],'--k','LineWidth',1)
+plot([min(amp_vec) max(amp_vec)],[PDR PDR],'--k','LineWidth',1)
+xlabel('Injected Current (nA)','FontSize',14)
+ylabel('Dischage Rate (Hz)','FontSize',14)
+set(gca,'TickDir','out');
+set(gca,'box','off')
+
