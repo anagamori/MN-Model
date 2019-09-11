@@ -15,15 +15,15 @@ index_MN = num2str(i);
 param.C_m = 1; %[microF/cm^2]
 param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
 
-param.l_s = parameter(77.5e-4,82.5e-4,n_MU,i); %[cm] soma length
-param.r_s = parameter(77.5e-4,82.5e-4,n_MU,i); %[cm] soma radius
+param.l_s = parameter(77.5,82.5,n_MU,i); %[cm] soma length
+param.r_s = parameter(77.5,82.5,n_MU,i); %[cm] soma radius
 param.R_m_s = parameter(1.15,1.05,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
 
-param.l_d = parameter(41.5e-4,62.5e-4,n_MU,i); %[cm] dendrite length
-param.r_d = parameter(5.5e-1,6.8e-1,n_MU,i); %[cm] dendrite radius
-param.R_m_d = parameter(14.4,10.7,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance
+param.l_d = parameter(41.5,62.,n_MU,i); %[cm] dendrite length
+param.r_d = 5.5e-1; %[cm] dendrite radius
+param.R_m_d = 14.4; %[kohm*cm^2] dendritic membrane specfic resistance
 
-param.I_r = parameter(3.5e-9,6.5e-9,n_MU,i); %3.5e-9; %[A] rheobase current
+param.I_r = 3.5e-9; %[A] rheobase current
 
 %%
 param.V_Na = 120; %(mV)
