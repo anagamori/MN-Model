@@ -32,8 +32,8 @@ param.V_l = 0; %(mV)
 
 %%
 param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-param.g_Kf = 0.5; %*param_s.area_s ; %(mS/cm^2)
-param.g_Ks = 4; %*param_s.area_s ; %(mS/cm^2)
+param.g_Kf = 4; %*param_s.area_s ; %(mS/cm^2)
+param.g_Ks = 16; %*param_s.area_s ; %(mS/cm^2)
 param.g_c = 0.05;
 %%
 param.alpha_m = 22*1000;
@@ -43,7 +43,7 @@ param.beta_h = 4*1000;
 param.alpha_n = 1.5*1000;
 param.beta_n = 0.1*1000;
 param.alpha_q = 1.5*1000;
-param.beta_q = 0.05*1000;
+param.beta_q = 0.025*1000;
 
 cd(data_folder)
 save([type '_' index_MN],'param')
