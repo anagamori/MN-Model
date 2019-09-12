@@ -33,8 +33,8 @@ cd(code_folder)
 count = 1;
 
 error = 1;
-
-while abs(error) < 0.01
+perturbation_amp = 0.2;
+for j = 1:10 %while abs(error) > 0.01
     %%
     amp_vec = 0:1:100;
     mean_FR = zeros(1,length(amp_vec));
@@ -75,21 +75,24 @@ while abs(error) < 0.01
     y1 = polyval(p_fit,amp_vec(index_t));
     
     error = slope_target - p_fit(1);
+    %x(9) +  (x(9)*perturbation_amp)./2.^(k-2)
     if error > 0
-        param.g_Ks = param.g_Ks + 0.01;
+        param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(count-2);
     else
-        param.g_Ks = param.g_Ks + 0.01;
+        param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(count-2);
     end
     count = count + 1;
+    
+    figure(1)
+    plot(amp_vec,mean_FR,'LineWidth',2)
+    hold on
+    plot([min(amp_vec) max(amp_vec)],[MDR MDR],'--k','LineWidth',1)
+    plot([min(amp_vec) max(amp_vec)],[PDR PDR],'--k','LineWidth',1)
+    xlabel('Injected Current (nA)','FontSize',14)
+    ylabel('Dischage Rate (Hz)','FontSize',14)
+    set(gca,'TickDir','out');
+    set(gca,'box','off')
+
 end
 
-figure(1)
-plot(amp_vec,mean_FR,'LineWidth',2)
-hold on
-plot([min(amp_vec) max(amp_vec)],[MDR MDR],'--k','LineWidth',1)
-plot([min(amp_vec) max(amp_vec)],[PDR PDR],'--k','LineWidth',1)
-xlabel('Injected Current (nA)','FontSize',14)
-ylabel('Dischage Rate (Hz)','FontSize',14)
-set(gca,'TickDir','out');
-set(gca,'box','off')
 
