@@ -11,7 +11,7 @@ n_MU = 11;
 type = 'S';
 index_MN = num2str(n_MU);
 
-alpha = 1;
+alpha = 1.3;
 %% Geometric parameters
 param.C_m = 1; %[microF/cm^2]
 param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
