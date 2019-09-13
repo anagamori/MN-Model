@@ -43,30 +43,27 @@ end
 %%
 index_t = find(~isnan(mean_FR));
 area_s = 2*pi*param.l_s*param.r_s;
-current = amp_vec*area_s*10^3;
+amp_vec = amp_vec*area_s*10^3;
 
-current_th = current(index_t(1))
+current_th = amp_vec(index_t(1))
 min_DR = mean_FR(index_t(1))
 
-p_fit = polyfit(current(index_t(10):end),mean_FR(index_t(10):end),1)
-y1 = polyval(p_fit,current(index_t));
+
+p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1)
+y1 = polyval(p_fit,amp_vec(index_t));
 
 figure(1)
-plot(current,mean_FR,'LineWidth',2)
-hold on
-plot(current(index_t),y1,'--k','LineWidth',1)
-xlabel('Injected Current (nA)','FontSize',14)
-ylabel('Dischage Rate (Hz)','FontSize',14)
-set(gca,'TickDir','out');
-set(gca,'box','off')
-
-figure(2)
 plot(amp_vec,mean_FR,'LineWidth',2)
-hold on 
+hold on
+plot(amp_vec(index_t),y1,'--k','LineWidth',1)
 xlabel('Injected Current (nA)','FontSize',14)
 ylabel('Dischage Rate (Hz)','FontSize',14)
 set(gca,'TickDir','out');
 set(gca,'box','off')
 
-
+MDR(j) = min_DR;
 end
+
+cd(data_folder)
+save([type '_MDR'],'MDR')
+cd(code_folder)

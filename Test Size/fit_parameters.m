@@ -34,9 +34,9 @@ count = 1;
 
 error = 1;
 perturbation_amp = 0.3;
-for j = 1:5 %while abs(error) > 0.01
+for j = 1:5 %while abs(error) > 0.01    %%
+
     j
-    %%
     amp_vec = 0:1:100;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
