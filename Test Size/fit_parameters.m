@@ -7,24 +7,27 @@ code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
 data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
 %%
+type = 'S';
+%%
 model_folder = '/Users/akira/Documents/GitHub/Twitch-Based-Muscle-Model/Model Parameters/Model_8';
 cd(model_folder)
 load('modelParameter')
+load([type '_MDR'])
 cd(code_folder)
 
 [val,loc] = min(modelParameter.U_th);
 testMN = loc;
 
-MDR = modelParameter.MDR(testMN);
-PDR = modelParameter.PDR(testMN);
+MDR_d = modelParameter.MDR(testMN);
+PDR_d = modelParameter.PDR(testMN);
 
 I_max = 100;
 I_th = 100*val;
-slope_target = (PDR-MDR)/(I_max-I_th);
+slope_target = (PDR_d-MDR_d)/(I_max-I_th);
 
 %%
-type = 'S';
-nMN = '1';
+[~,loc_min] = min(abs(MDR_d-MDR));
+nMN = num2str(loc_min);
 
 cd(data_folder)
 load([type '_' nMN])
@@ -85,8 +88,8 @@ for j = 1:5 %while abs(error) > 0.01    %%
     plot(amp_vec,mean_FR,'LineWidth',2)
     hold on
     plot(amp_vec(index_t),y1,'--k','LineWidth',1)
-    plot([min(amp_vec) max(amp_vec)],[MDR MDR],'--k','LineWidth',1)
-    plot([min(amp_vec) max(amp_vec)],[PDR PDR],'--k','LineWidth',1)
+    plot([min(amp_vec) max(amp_vec)],[MDR_d MDR_d],'--k','LineWidth',1)
+    plot([min(amp_vec) max(amp_vec)],[PDR_d PDR_d],'--k','LineWidth',1)
     xlabel('Injected Current (nA)','FontSize',14)
     ylabel('Dischage Rate (Hz)','FontSize',14)
     set(gca,'TickDir','out');
