@@ -95,6 +95,8 @@ end
 
 %%
 % Fit the recruitment threshold by adjusting parameter I_r
+mean_FR = zeros(1,length(amp_vec));
+CoV_FR = zeros(1,length(amp_vec));
 perturbation_amp = 0.3;
 count = 1;
 for j = 1:5
@@ -180,6 +182,8 @@ index_t = find(~isnan(mean_FR));
 
 amp_th = amp_vec(index_t(1));
 min_DR = mean_FR(index_t(1));
+p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);
+y1 = polyval(p_fit,amp_vec(index_t));
 figure(1)
 plot(amp_vec,mean_FR,'LineWidth',2)
 hold on

@@ -7,18 +7,18 @@ code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
 data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
 %%
-type = 'F';
+type = 'S';
 nMN = '1';
 
 cd(data_folder)
 load([type '_' nMN])
 cd(code_folder)
 %%
-Fs = 50000;
+Fs = 10000;
 time = 0:1/Fs:5;
 noise_amp = 0;
 
-amp_vec = 151;
+amp_vec = 0.001/(2*pi*param.l_s*param.r_s);
 input  = zeros(1,length(time));
 input(1*Fs+1:1.2*Fs) = amp_vec;
 
