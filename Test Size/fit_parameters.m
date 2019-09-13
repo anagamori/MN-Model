@@ -12,7 +12,6 @@ type = 'S';
 model_folder = '/Users/akira/Documents/GitHub/Twitch-Based-Muscle-Model/Model Parameters/Model_8';
 cd(model_folder)
 load('modelParameter')
-load([type '_MDR'])
 cd(code_folder)
 
 [val,loc] = min(modelParameter.U_th);
@@ -26,6 +25,10 @@ I_th = 100*val;
 slope_target = (PDR_d-MDR_d)/(I_max-I_th);
 
 %%
+cd(data_folder)
+load([type '_MDR'])
+cd(code_folder)
+
 [~,loc_min] = min(abs(MDR_d-MDR));
 nMN = num2str(loc_min);
 
@@ -33,6 +36,7 @@ cd(data_folder)
 load([type '_' nMN])
 cd(code_folder)
 
+%%
 count = 1;
 
 error = 1;
