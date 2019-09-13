@@ -42,10 +42,10 @@ cd(code_folder)
 count = 1;
 perturbation_amp = 0.3;
 
-%% 
+%%
 % Fit the sloe of the f-I relationship by adjusting parameter g_Ks
-for j = 1:5 
-
+for j = 1:5
+    
     j
     amp_vec = 0:1:100;
     mean_FR = zeros(1,length(amp_vec));
@@ -90,13 +90,15 @@ for j = 1:5
         param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(count-2);
     end
     count = count + 1;
-       
+    
 end
 
-%% 
+%%
 % Fit the recruitment threshold by adjusting parameter I_r
-for j = 1:5 
-
+perturbation_amp = 0.3;
+count = 1;
+for j = 1:5
+    
     j
     
     amp_vec = 0:0.1:50;
@@ -104,11 +106,11 @@ for j = 1:5
     CoV_FR = zeros(1,length(amp_vec));
     
     error = I_th - amp_th;
-
+    
     if error > 0
-        param.I_r = param.I_r - (param.I_r*perturbation_amp)./2.^(count-2);
-    else
         param.I_r = param.I_r + (param.I_r*perturbation_amp)./2.^(count-2);
+    else
+        param.I_r = param.I_r - (param.I_r*perturbation_amp)./2.^(count-2);
     end
     
     for i = 1:length(amp_vec)
@@ -123,7 +125,7 @@ for j = 1:5
         
         inputOpt = 1;
         pltOpt = 0;
-        %%
+        
         [binary,V_s,V_d] = Cisi2008_function(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
         
         spike_time = find(binary(end-2*Fs+1:end));
@@ -133,7 +135,7 @@ for j = 1:5
     end
     
     
-    %%
+    
     index_t = find(~isnan(mean_FR));
     
     amp_th = amp_vec(index_t(1));
@@ -143,10 +145,41 @@ for j = 1:5
     y1 = polyval(p_fit,amp_vec(index_t));
     
     count = count + 1;
-       
+    
 end
 
+
 %% Plot the result
+amp_vec = 0:0.1:100;
+mean_FR = zeros(1,length(amp_vec));
+CoV_FR = zeros(1,length(amp_vec));
+for i = 1:length(amp_vec)
+    
+    Fs = 10000;
+    time = 0:1/Fs:5;
+    noise_amp = 0;
+    
+    amp = amp_vec(i);
+    input  = zeros(1,length(time));
+    input(1*Fs+1:end) = amp;
+    
+    inputOpt = 1;
+    pltOpt = 0;
+    
+    [binary,V_s,V_d] = Cisi2008_function(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
+    
+    spike_time = find(binary(end-2*Fs+1:end));
+    ISI = diff(spike_time)/(Fs/1000);
+    mean_FR(i) = mean(1./ISI*1000);
+    CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
+end
+
+
+
+index_t = find(~isnan(mean_FR));
+
+amp_th = amp_vec(index_t(1));
+min_DR = mean_FR(index_t(1));
 figure(1)
 plot(amp_vec,mean_FR,'LineWidth',2)
 hold on
