@@ -1,4 +1,4 @@
-% close all
+close all
 clear all
 clc
 
@@ -6,7 +6,7 @@ clc
 code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
 data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
-n_MU = 1;
+n_MU = 10;
 for j = 1:n_MU
     j
 %%
@@ -18,7 +18,7 @@ load([type '_' index_MN])
 cd(code_folder)
 
 %param.I_r = 3.8333e-9;
-param.g_Na = 70;
+%param.g_Na = 70;
 %%
 amp_vec = 4:2:50;
 for i = 1:length(amp_vec)
