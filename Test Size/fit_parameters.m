@@ -99,7 +99,7 @@ for j = 1:5
 
     j
     
-    amp_vec = 0:0.1:100;
+    amp_vec = 0:0.1:50;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     
