@@ -6,9 +6,9 @@ clc
 code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Test Size';
 data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/MN Parameter';
 
-n_MU = 10;
+n_MU = 1;
 for i = 1:n_MU
-type = 'F';
+type = 'S';
 index_MN = num2str(i);
 
 %% Geometric parameters
