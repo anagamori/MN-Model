@@ -16,8 +16,8 @@ alpha = 1;
 param.C_m = 1; %[microF/cm^2]
 param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
 
-param.l_s = 50e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
-param.r_s = 50e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma radius
+param.l_s = 60e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
+param.r_s = 60e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma radius
 param.R_m_s = 1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
 
 param.l_d = 41.5e-4 - alpha*(62.5e-4-41.5e-4); %parameter(83.5e-4,92.5e-4,n_MU,i); %[cm] dendrite length
