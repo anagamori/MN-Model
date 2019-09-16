@@ -6,22 +6,22 @@ clc
 code_folder = '/Users/akira/Documents/GitHub/MN-Model/Test Size';
 data_folder = '/Users/akira/Documents/GitHub/MN-Model/MN Parameter';
 
-n_MU = 1;
-for j = 1:n_MU
+n_MU = 11;
+for j = 1 %:n_MU
     j
 %%
-% type = 'S';
-% index_MN = num2str(j);
-% 
-% cd(data_folder)
-% load([type '_' index_MN])
-% cd(code_folder)
+type = 'S';
+index_MN = num2str(n_MU);
 
-param.g_Ks = 45;
+cd(data_folder)
+load([type '_' index_MN])
+cd(code_folder)
+
+%param.g_Ks = 45;
 %param.I_r = 3.8333e-9;
 %param.g_Na = 70;
 %%
-amp_vec = 0:1:100;
+amp_vec = 0:0.1:20;
 mean_FR = zeros(1,length(amp_vec));
 CoV_FR = zeros(1,length(amp_vec));
 for i = 1:length(amp_vec)

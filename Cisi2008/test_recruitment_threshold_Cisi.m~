@@ -17,7 +17,7 @@ cd(data_folder)
 load([type '_' num2str(index_MN)])
 cd(code_folder)
 
-param.g_Ks = 45;
+%param.g_Ks = 45;
 %param.I_r = 3.8333e-9;
 %param.g_Na = 70;
 %%

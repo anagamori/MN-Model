@@ -3,8 +3,8 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 
 n_MU = 1;
 
@@ -14,15 +14,15 @@ index_MN = num2str(n_MU);
 alpha = 1;
 %% Geometric parameters
 param.C_m = 2; %[microF/cm^2]
-param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
+% param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
 
-param.q = 11.2; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
+param.q = 6; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
 %total_area = 179000e-8;
-param.l_s = 50e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
-param.r_s = 50e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma radius
-param.R_m_s = 2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
+param.l_s = 45e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
+param.r_s = 45e-4; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma radius
+param.R_m_s = 3.5; %2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
 
-param.R_m_d = 2.2*2; %14.4 + alpha*(14.4-10.7); %parameter(6.95,6.05,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance
+param.R_m_d = 3.5; %2.2; %14.4 + alpha*(14.4-10.7); %parameter(6.95,6.05,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance
 
 param.I_r = 2.0e-9; %parameter(17.5e-9,25.1e-9,n_MU,i); %3.5e-9; %[A] rheobase current
 
@@ -35,7 +35,7 @@ param.V_l = 0; %(mV)
 param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
 param.g_Kf = 4; %*param_s.area_s ; %(mS/cm^2)
 param.g_Ks = 16; %*param_s.area_s ; %(mS/cm^2)
-param.g_c = 0.05;
+param.g_c = 0.1;
 %%
 param.alpha_m = 22*1000;
 param.beta_m = 13*1000;
