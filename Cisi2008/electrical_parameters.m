@@ -20,14 +20,14 @@ i_MU = 1:N_MU;
 min_d = 70;
 max_d = 350; 
 rng(1)
-d_vec = round(normrnd((max_d+min_d)/2,67,[1,N_MU]));
-max(d_vec)
-min(d_vec)
-d_vec = d_vec*10^-6;
+area_s = round(normrnd((max_d+min_d)/2,67,[1,N_MU]));
+max(area_s)
+min(area_s)
+area_s = area_s*10^-6;
 figure(1)
-histogram(d_vec)
+histogram(area_s)
 title('Soma surface area')
-mnParameter.d = d_vec;
+mnParameter.area_s = area_s;
 %%
 min_R_m = 0.3;
 max_R_m = 1.8;
