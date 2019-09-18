@@ -13,7 +13,7 @@ index_MN = num2str(n_MU);
 
 alpha = 1;
 %% Geometric parameters
-param.C_m = 1; %[microF/cm^2]
+param.C_m = 2; %[microF/cm^2]
 % param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
 
 param.q = 12.9; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
@@ -68,3 +68,9 @@ pltOpt = 1;
 V_s_ss = mean(V_s(round(1.14*Fs):round(1.2*Fs)));
 R_input_s = V_s_ss/0.001
 
+%%
+V_s_ts = V_s(round(1.2*Fs):round(1.23*Fs));
+time_ts = 0:1/Fs:0.03;
+f = fit(time_ts',V_s_ts','exp1');
+coeffs_f = coeffvalues(f);
+tau_s = abs(1/coeffs_f(2)*1000)

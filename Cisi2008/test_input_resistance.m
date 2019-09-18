@@ -70,8 +70,15 @@ for i = 1:120
     V_s_ss = mean(V_s(round(1.14*Fs):round(1.2*Fs)));
     R_input_s(i) = V_s_ss/0.001;
     
+    V_s_ts = V_s(round(1.2*Fs):round(1.23*Fs));
+    time_ts = 0:1/Fs:0.03;
+    f = fit(time_ts',V_s_ts','exp1');
+    coeffs_f = coeffvalues(f);
+    tau_s(i) = abs(1/coeffs_f(2)*1000);
 end
 
 figure(1)
 histogram(R_input_s)
 
+figure(2)
+histogram(tau_s)
