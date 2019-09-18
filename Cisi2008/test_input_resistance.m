@@ -3,8 +3,8 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 
 cd(data_folder)
 load('mnParameter')
