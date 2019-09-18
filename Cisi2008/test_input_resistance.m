@@ -58,7 +58,7 @@ for i = 1:120
     
     %% Test input resistance
     % Methods (Zengel et al. 1985)
-    amp_vec = 0.001/(2*pi*param.l_s*param.r_s);
+    amp_vec = 0.001/param.area_s;
     input  = zeros(1,length(time));
     input(1*Fs+1:1.2*Fs) = amp_vec;
     
