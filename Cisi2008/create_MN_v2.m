@@ -13,10 +13,10 @@ index_MN = num2str(n_MU);
 
 alpha = 1;
 %% Geometric parameters
-param.C_m = 2; %[microF/cm^2]
+param.C_m = 3; %[microF/cm^2]
 % param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
 
-param.q = 12.9; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
+param.q = 12.9; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974) 12.9
 %total_area = 179000e-8;
 param.area_s = 70e-6; %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
 param.R_m_s = 1.8; %2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
@@ -45,9 +45,9 @@ param.beta_n = 0.1*1000;
 param.alpha_q = 1.5*1000;
 param.beta_q = 0.025*1000;
 
-cd(data_folder)
-save([type '_' index_MN],'param')
-cd(code_folder)
+% cd(data_folder)
+% save([type '_' index_MN],'param')
+% cd(code_folder)
 
 %%
 Fs = 10000;
@@ -66,7 +66,7 @@ pltOpt = 1;
 [binary,V_s,~] = Cisi2008_function_v2(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
 
 V_s_ss = mean(V_s(round(1.14*Fs):round(1.2*Fs)));
-R_input_s = V_s_ss/0.001
+R_input_s = V_s_ss/0.001*1000
 
 %%
 V_s_ts = V_s(round(1.2*Fs):round(1.23*Fs));
@@ -74,3 +74,6 @@ time_ts = 0:1/Fs:0.03;
 f = fit(time_ts',V_s_ts','exp1');
 coeffs_f = coeffvalues(f);
 tau_s = abs(1/coeffs_f(2)*1000)
+
+figure()
+plot(time_ts,V_s_ts)
