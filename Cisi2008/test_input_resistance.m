@@ -24,8 +24,7 @@ for i = 1:120
     
     param.q = 12.9; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
     %total_area = 179000e-8;
-    param.l_s = mnParameter.d(i); %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma length
-    param.r_s = mnParameter.d(i); %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm] soma radius
+    param.area_s = mnParameter.area_s(i); %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm^2] 
     param.R_m_s = mnParameter.R_m(i); %2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
     
     param.R_m_d = mnParameter.R_m(i); %2.2; %14.4 + alpha*(14.4-10.7); %parameter(6.95,6.05,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance

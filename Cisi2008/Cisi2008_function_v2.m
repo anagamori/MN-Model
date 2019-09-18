@@ -10,7 +10,7 @@ function [binary,V_s_vec,V_d_vec] = Cisi2008_function_v2(param,time,input,Fs,noi
 step = 1/Fs;
 
 %% Geometric parameters
-param_s.area_s = 2*pi*param.r_s*param.l_s; % the surface area of soma
+param_s.area_s = param.area_s; % the surface area of soma
 param_d.area_d = param_s.area_s*param.q; % the surface area of dendrite
 
 p = 1/(1+param.q); % the ratio of somatic surface area to total cell surface area
