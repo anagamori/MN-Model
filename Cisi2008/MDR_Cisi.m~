@@ -12,7 +12,7 @@ load('MDR')
 load('modelParameter')
 cd(code_folder)
 
-n_MU = 1; %:120
+for n_MU = 1:120
 [out,idx] = sort(modelParameter.U_th);
 MDR(idx(n_MU))
 
@@ -51,7 +51,7 @@ param.beta_q = mnParameter.beta_q(n_MU);
 
 
 %%
-amp_vec = 20:0.1:70;
+amp_vec = 0:0.1:50;
 mean_FR = zeros(1,length(amp_vec));
 CoV_FR = zeros(1,length(amp_vec));
 for i = 1:length(amp_vec)
@@ -63,7 +63,7 @@ for i = 1:length(amp_vec)
     input  = zeros(1,length(time));
     input(1*Fs+1:end) = amp;
     
-    inputOpt = 1;
+    inputOpt = 2;
     pltOpt = 0;
     %%
     [binary,V_s,V_d] = Cisi2008_function_v2(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
@@ -78,10 +78,9 @@ index_t = find(~isnan(mean_FR));
 area_s = param.area_s;
 %amp_vec = amp_vec; %*area_s*10^3;
 
-current_th = amp_vec(index_t(1))
-min_DR = mean_FR(index_t(1))
-% current_th(n_MU) = amp_vec(index_t(1));
-% min_DR(n_MU) = mean_FR(index_t(1));
+current_th(n_MU) = amp_vec(index_t(1));
+min_DR(n_MU) = mean_FR(index_t(1));
+
 
 p_fit = polyfit(amp_vec(index_t)*area_s*10^3,mean_FR(index_t),1)
 y1 = polyval(p_fit,amp_vec(index_t));
@@ -89,13 +88,13 @@ y1 = polyval(p_fit,amp_vec(index_t));
 figure(1)
 plot(amp_vec,mean_FR,'LineWidth',2)
 hold on
-plot([0 amp_vec(end)],[MDR(idx(n_MU)) MDR(idx(n_MU))],'--k','LineWidth',1)
+plot([0 amp_vec(end)],[MDR(index) MDR(index)],'--k','LineWidth',1)
 xlabel('Injected Current (nA)','FontSize',14)
 ylabel('Dischage Rate (Hz)','FontSize',14)
 set(gca,'TickDir','out');
 set(gca,'box','off')
 
-%end
+end
 % cd(data_folder)
 % save([type '_MDR'],'MDR')
 % cd(code_folder)
