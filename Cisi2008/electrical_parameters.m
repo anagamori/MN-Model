@@ -17,10 +17,10 @@ data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008/MN Parame
 N_MU = 120;
 i_MU = 1:N_MU;
 %% Soma diameter
-min_d = 70;
+min_d = 65;
 max_d = 350; 
 rng(1)
-area_s = round(normrnd((max_d+min_d)/2,67,[1,N_MU]));
+area_s = round(normrnd((max_d+min_d)/2,69,[1,N_MU]));
 max(area_s)
 min(area_s)
 area_s = area_s*10^-6;
@@ -29,13 +29,22 @@ histogram(area_s)
 title('Soma surface area')
 mnParameter.area_s = area_s;
 %%
-min_R_m = 0.3;
-max_R_m = 1.8;
-f_R_m = fit([1 N_MU]',[max_R_m min_R_m]','exp1');
-coeffs_f_R_m = coeffvalues(f_R_m);
-R_m_vec = coeffs_f_R_m(1)*exp(coeffs_f_R_m(2)*i_MU); % the resulting recruitment threshold for individual units
+min_R_m_s = 0.5;
+max_R_m_s = 1;
+f_R_m_s = fit([1 N_MU]',[max_R_m_s min_R_m_s]','exp1');
+coeffs_f_R_m_s = coeffvalues(f_R_m_s);
+R_m_s_vec = coeffs_f_R_m_s(1)*exp(coeffs_f_R_m_s(2)*i_MU); % the resulting recruitment threshold for individual units
 
-mnParameter.R_m = R_m_vec;
+mnParameter.R_m_s = R_m_s_vec;
+
+%%
+min_R_m_d = 5.3;
+max_R_m_d = 5.8;
+f_R_m_d = fit([1 N_MU]',[max_R_m_d min_R_m_d]','exp1');
+coeffs_f_R_m_d = coeffvalues(f_R_m_d);
+R_m_d_vec = coeffs_f_R_m_d(1)*exp(coeffs_f_R_m_d(2)*i_MU); % the resulting recruitment threshold for individual units
+
+mnParameter.R_m_d = R_m_d_vec;
 %%
 min_I_r = 1e-9;
 max_I_r = 32e-9;
