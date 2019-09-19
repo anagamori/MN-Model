@@ -15,7 +15,6 @@ cd(code_folder)
 [~,index] = min(modelParameter.U_th);
 MDR(index)
 
-
 n_MU = 1;
 for j = 1:n_MU
     j
