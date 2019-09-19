@@ -19,15 +19,15 @@ for i = 1:120
     
     alpha = 1;
     %% Geometric parameters
-    param.C_m = 1; %[microF/cm^2]
+    param.C_m = 3; %[microF/cm^2]
     % param.R_i = 70e-1; %[kohm*cm] cytoplasm resistivity
     
     param.q = 12.9; % the ratio of dendritic surface area to somatic surface area (Barrett and Crill 1974)
     %total_area = 179000e-8;
     param.area_s = mnParameter.area_s(i); %77.5e-4 - alpha*(82.5e-4-77.5e-4); %parameter(87.5e-4,113e-4,n_MU,i); %[cm^2] 
-    param.R_m_s = mnParameter.R_m(i); %2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
+    param.R_m_s = mnParameter.R_m_s(i); %2.2; %1.15 + alpha*(1.15-1.05); %parameter(0.95,0.65,n_MU,i); %[kohm*cm^2] somatic membrane specfic resistance
     
-    param.R_m_d = mnParameter.R_m(i); %2.2; %14.4 + alpha*(14.4-10.7); %parameter(6.95,6.05,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance
+    param.R_m_d = mnParameter.R_m_d(i); %2.2; %14.4 + alpha*(14.4-10.7); %parameter(6.95,6.05,n_MU,i); %[kohm*cm^2] dendritic membrane specfic resistance
     
     param.I_r = 2.0e-9; %parameter(17.5e-9,25.1e-9,n_MU,i); %3.5e-9; %[A] rheobase current
     
