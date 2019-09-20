@@ -9,8 +9,8 @@ close all
 clear all
 clc
 
-code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008';
-data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
+code_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008';
+data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 
 N_MU = 120;
 i_MU = 1:N_MU;
@@ -25,7 +25,7 @@ area_s = area_s*10^-6;
 figure(1)
 histogram(area_s)
 title('Soma surface area')
-mnParameter.area_s = area_s';
+mnParameter.area_s = sort(area_s)';
 %%
 min_R_m_s = 0.5;
 max_R_m_s = 1;
@@ -50,7 +50,7 @@ rng(1)
 I_r_vec = raylrnd(10,1,120);
 I_r_vec = I_r_vec*10^-9;
 
-mnParameter.I_r = I_r_vec';
+mnParameter.I_r = sort(I_r_vec)';
 
 figure(3)
 histogram(I_r_vec)

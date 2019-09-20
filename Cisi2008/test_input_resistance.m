@@ -78,7 +78,13 @@ for i = 1:120
 end
 
 figure(1)
+subplot(2,1,1)
 histogram(R_input_s)
+subplot(2,1,2)
+plot(R_input_s,'o')
 
 figure(2)
+subplot(2,1,1)
 histogram(tau_s)
+subplot(2,1,2)
+plot(tau_s,'o')

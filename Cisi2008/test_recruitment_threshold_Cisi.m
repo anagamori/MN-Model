@@ -8,6 +8,8 @@ data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 
 cd(data_folder)
 load('mnParameter')
+load('current_th')
+load('min_DR')
 cd(code_folder)
 n_MU = 120;
 for j = 1:n_MU
@@ -32,8 +34,8 @@ for j = 1:n_MU
     
     %%
     param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-    param.g_Kf = mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
-    param.g_Ks = mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Kf = 4; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Ks = 16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
     param.g_c = 0.1;
     %%
     param.alpha_m = 22*1000;
@@ -43,10 +45,10 @@ for j = 1:n_MU
     param.alpha_n = 1.5*1000;
     param.beta_n = 0.1*1000;
     param.alpha_q = 1.5*1000;
-    param.beta_q = mnParameter.beta_q(j);
+    param.beta_q = 0.025*1000; %mnParameter.beta_q(j);
     
     %%
-    amp_vec = 0:5:200;
+    amp_vec = 0:5:100;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     for i = 1:length(amp_vec)
@@ -90,6 +92,6 @@ for j = 1:n_MU
 end
 
 cd(data_folder)
-load('current_th','current_th')
-load('min_DR','min_DR')
+save('current_th','current_th')
+save('min_DR','min_DR')
 cd(code_folder)

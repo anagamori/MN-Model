@@ -20,9 +20,10 @@ load('mnParameter')
 load('MDR')
 load('modelParameter')
 cd(code_folder)
-
-n_MU = 1; %:120
 [out,idx] = sort(modelParameter.U_th);
+
+for n_MU = 5:120
+n_MU
 MDR(idx(n_MU))
 
 %% Geometric parameters
@@ -60,7 +61,7 @@ param.beta_q = mnParameter.beta_q(n_MU);
 
 
 %%
-amp_vec = 0:0.1:50;
+amp_vec = 0:0.50;
 perturbation_amp = 0.2;
 %%
 for k = 1:5
@@ -75,7 +76,7 @@ for k = 1:5
         input  = zeros(1,length(time));
         input(1*Fs+1:end) = amp;
         
-        inputOpt = 1;
+        inputOpt = 2;
         pltOpt = 0;
         %%
         [binary,V_s,V_d] = Cisi2008_function_v2(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
@@ -95,9 +96,9 @@ for k = 1:5
     error = MDR(idx(n_MU)) - min_DR;
     
     if error > 0
-        param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);
-    else
         param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(k-2);
+    else
+        param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);
     end
     
     p_fit = polyfit(amp_vec(index_t)*area_s*10^3,mean_FR(index_t),1);
@@ -112,7 +113,11 @@ for k = 1:5
     set(gca,'TickDir','out');
     set(gca,'box','off')
 end
+
+min_DR
 %end
-% cd(data_folder)
-% save([type '_MDR'],'MDR')
-% cd(code_folder)
+cd(data_folder)
+save(['MN_' num2str(n_MU)],'param')
+cd(code_folder)
+
+end

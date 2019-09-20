@@ -51,7 +51,7 @@ param.beta_q = mnParameter.beta_q(n_MU);
 
 
 %%
-amp_vec = 20:0.1:70;
+amp_vec = 70:0.1:100;
 mean_FR = zeros(1,length(amp_vec));
 CoV_FR = zeros(1,length(amp_vec));
 for i = 1:length(amp_vec)
