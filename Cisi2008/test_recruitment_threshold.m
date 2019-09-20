@@ -1,3 +1,12 @@
+%==========================================================================
+% test_recruitment_threshold.m
+% Author: Akira Nagamori
+% Last update: 9/20/19
+% Descriptions:
+%   - Obtain rough estimate of recruitment threshold of individual MNs
+%   - Save 
+%==========================================================================
+
 close all
 clear all
 clc
@@ -12,7 +21,7 @@ load('current_th')
 load('min_DR')
 cd(code_folder)
 n_MU = 120;
-for j = 1:n_MU
+for j = 2:n_MU
     j
     %% Geometric parameters
     param.C_m = 3; %[microF/cm^2]
@@ -48,7 +57,8 @@ for j = 1:n_MU
     param.beta_q = 0.025*1000; %mnParameter.beta_q(j);
     
     %%
-    amp_vec = 0:5:100;
+    tic 
+    amp_vec = 0:0.1:50;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     for i = 1:length(amp_vec)
@@ -70,13 +80,13 @@ for j = 1:n_MU
         mean_FR(i) = mean(1./ISI*1000);
         CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
     end
+    toc
     %%
     index_t = find(~isnan(mean_FR));
     
     current_th(j) = amp_vec(index_t(1));
     min_DR(j) = mean_FR(index_t(1));
-    
-    
+      
     p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);
     y1 = polyval(p_fit,amp_vec(index_t));
     
@@ -84,7 +94,7 @@ for j = 1:n_MU
     plot(amp_vec,mean_FR,'LineWidth',2)
     hold on
     plot(amp_vec(index_t),y1,'--k','LineWidth',1)
-    xlabel('Injected Current (nA)','FontSize',14)
+    xlabel('Injected Current (microA/cm^2)','FontSize',14)
     ylabel('Dischage Rate (Hz)','FontSize',14)
     set(gca,'TickDir','out');
     set(gca,'box','off')

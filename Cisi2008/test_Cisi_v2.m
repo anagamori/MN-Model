@@ -11,7 +11,7 @@ load('mnParameter')
 load('current_th')
 load('min_DR')
 cd(code_folder)
-n_MU = 18;
+n_MU = 1;
 
 %% Geometric parameters
 param.C_m = 3; %[microF/cm^2]
@@ -52,7 +52,7 @@ noise_amp = 0;
 
 %% Test input resistance
 % Methods (Zengel et al. 1985)
-amp = 20;
+amp = 50;
 input  = zeros(1,length(time));
 input(1*Fs+1:end) = amp;
 

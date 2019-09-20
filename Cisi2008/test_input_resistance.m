@@ -1,3 +1,14 @@
+%==========================================================================
+% test_input_resistance.m
+% Author: Akira Nagamori
+% Last update: 9/20/19
+% Descriptions:
+%   - Test the input resistance and membrane time constant of individual 
+%   MNs to somatic input for a given set of parameters defined by 
+%   'electrical_parameters.m'
+%   - Plot the distribution of input resistance and membrane time constant
+%==========================================================================
+
 close all
 clear all
 clc
@@ -88,3 +99,8 @@ subplot(2,1,1)
 histogram(tau_s)
 subplot(2,1,2)
 plot(tau_s,'o')
+
+cd(data_folder)
+save('R_input_s','R_input_s')
+save('tau_s','tau_s')
+cd(code_folder)
