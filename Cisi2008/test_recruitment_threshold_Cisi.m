@@ -91,4 +91,5 @@ end
 
 cd(data_folder)
 load('current_th','current_th')
+load('min_DR','min_DR')
 cd(code_folder)
