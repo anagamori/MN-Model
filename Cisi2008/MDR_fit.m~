@@ -5,9 +5,7 @@
 % Descriptions:
 %   - Fit the minimal discharge rate of a MN to a desired minimal discharge
 %   rate by adjusting model parameters
-%   - Save MN parameters 
-%   - Note that MN indexes follow the order of recruitment
-%   thresholds, not contraction time or f_0.5 
+%   - Save m
 %==========================================================================
 
 close all

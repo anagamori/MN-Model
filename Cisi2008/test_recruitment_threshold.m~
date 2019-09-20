@@ -3,8 +3,8 @@
 % Author: Akira Nagamori
 % Last update: 9/20/19
 % Descriptions:
-%   - Find the recruitment threshold of individual MNs
-%   - Save the values (current_th)
+%   - Obtain rough estimate of recruitment threshold of individual MNs
+%   - Save 
 %==========================================================================
 
 close all
@@ -66,7 +66,7 @@ for j = 2:n_MU
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     binary_cell = cell(1,length(amp_vec));
-    %parpool(10)
+    parpool(10)
     parfor i = 1:length(amp_vec)
         
         amp = amp_vec(i);
@@ -76,16 +76,15 @@ for j = 2:n_MU
         inputOpt = 2;
         pltOpt = 0;
         %%
-        [binary_temp,V_s,V_d] = Cisi2008_function_v2(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
+        [binary,V_s,V_d] = Cisi2008_function_v2(param,time,input,Fs,noise_amp,inputOpt,pltOpt);
         
-        binary_cell{i} = binary_temp;
+        binary_cell{i} = binary;
     end
     for k = 1:length(amp_vec)
-        binary = binary_cell{k};
-        spike_time = find(binary(end-2*Fs+1:end));
+               spike_time = find(binary(end-2*Fs+1:end));
         ISI = diff(spike_time)/(Fs/1000);
-        mean_FR(k) = mean(1./ISI*1000);
-        CoV_FR(k) = std(1./ISI*1000)/mean_FR(k)*100;
+        mean_FR(i) = mean(1./ISI*1000);
+        CoV_FR(i) = std(1./ISI*1000)/mean_FR(i)*100;
     end
     toc
     %%

@@ -11,7 +11,7 @@ load('mnParameter')
 load('current_th')
 load('min_DR')
 cd(code_folder)
-n_MU = 1;
+n_MU = 120;
 
 %% Geometric parameters
 param.C_m = 3; %[microF/cm^2]
@@ -33,8 +33,8 @@ param.V_l = 0; %(mV)
 
 %%
 param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-param.g_Kf = 4; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
-param.g_Ks = 16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
+param.g_Kf = 0.5; %4; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
+param.g_Ks = 4; %16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
 param.g_c = 0.1;
 %%
 param.alpha_m = 22*1000;
@@ -44,7 +44,7 @@ param.beta_h = 4*1000;
 param.alpha_n = 1.5*1000;
 param.beta_n = 0.1*1000;
 param.alpha_q = 1.5*1000;
-param.beta_q = 0.025*1000; %mnParameter.beta_q(j);
+param.beta_q = 0.05*1000; %mnParameter.beta_q(j);
 %%
 Fs = 10000;
 time = 0:1/Fs:5;
