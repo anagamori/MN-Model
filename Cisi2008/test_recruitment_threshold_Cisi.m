@@ -9,7 +9,7 @@ data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 cd(data_folder)
 load('mnParameter')
 cd(code_folder)
-n_MU = 10;
+n_MU = 120;
 for j = 1:n_MU
     j
     %% Geometric parameters
@@ -46,7 +46,7 @@ for j = 1:n_MU
     param.beta_q = mnParameter.beta_q(j);
     
     %%
-    amp_vec = 0:2:100;
+    amp_vec = 0:5:200;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     for i = 1:length(amp_vec)
@@ -89,3 +89,6 @@ for j = 1:n_MU
     
 end
 
+cd(data_folder)
+load('current_th','current_th')
+cd(code_folder)
