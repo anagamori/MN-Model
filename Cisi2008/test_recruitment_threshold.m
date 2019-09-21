@@ -21,7 +21,7 @@ load('current_th')
 load('min_DR')
 cd(code_folder)
 n_MU = 120;
-for j = 2:n_MU
+for j = 62:n_MU
     j
     %% Geometric parameters
     param.C_m = 3; %[microF/cm^2]
@@ -43,8 +43,8 @@ for j = 2:n_MU
     
     %%
     param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-    param.g_Kf = 4; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
-    param.g_Ks = 16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Kf = mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Ks = mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
     param.g_c = 0.1;
     %%
     param.alpha_m = 22*1000;
@@ -54,7 +54,7 @@ for j = 2:n_MU
     param.alpha_n = 1.5*1000;
     param.beta_n = 0.1*1000;
     param.alpha_q = 1.5*1000;
-    param.beta_q = 0.025*1000; %mnParameter.beta_q(j);
+    param.beta_q = mnParameter.beta_q(j);
     
     %%
     tic 
@@ -62,7 +62,8 @@ for j = 2:n_MU
     time = 0:1/Fs:5;
     noise_amp = 0;
         
-    amp_vec = 0:0.1:50;
+    amp_vec = 50:0.1:100;
+    amp_vec = amp_vec.*10^-3;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));
     binary_cell = cell(1,length(amp_vec));
