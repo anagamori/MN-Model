@@ -3,15 +3,15 @@ clear all
 clc
 
 %%
-code_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008';
-data_folder = '/Users/akira/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
+code_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008';
+data_folder = '/Users/akiranagamori/Documents/GitHub/MN-Model/Cisi2008/MN Parameter';
 
 cd(data_folder)
 load('mnParameter')
 load('current_th')
 load('min_DR')
 cd(code_folder)
-n_MU = 2;
+n_MU = 116;
 
 %% Geometric parameters
 param.C_m = 3; %[microF/cm^2]
@@ -33,8 +33,8 @@ param.V_l = 0; %(mV)
 
 %%
 param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-param.g_Kf = 4; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
-param.g_Ks = 30; %16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
+param.g_Kf = 0.5; %mnParameter.g_Kf(j); %*param_s.area_s ; %(mS/cm^2)
+param.g_Ks = 4; %16; %mnParameter.g_Ks(j); %*param_s.area_s ; %(mS/cm^2)
 param.g_c = 0.1;
 %%
 param.alpha_m = 22*1000;
@@ -43,8 +43,8 @@ param.alpha_h = 0.5*1000;
 param.beta_h = 4*1000;
 param.alpha_n = 1.5*1000;
 param.beta_n = 0.1*1000;
-param.alpha_q = 1.5*1000;
-param.beta_q = 0.05*1000; %mnParameter.beta_q(j);
+param.alpha_q = 1.28*1000;
+param.beta_q = 0.2*1000; %mnParameter.beta_q(j);
 %%
 Fs = 10000;
 time = 0:1/Fs:5;
@@ -52,7 +52,7 @@ noise_amp = 0;
 
 %% Test input resistance
 % Methods (Zengel et al. 1985)
-amp = 10.6;
+amp = 23.64; %current_th(n_MU);
 input  = zeros(1,length(time));
 input(1*Fs+1:end) = amp;
 
@@ -65,3 +65,7 @@ spike_time = find(binary(end-2*Fs+1:end));
 ISI = diff(spike_time)/(Fs/1000);
 mean_FR = mean(1./ISI*1000)
 CoV_FR = std(1./ISI*1000)/mean_FR*100;
+
+cd(data_folder)
+save(['MN_' num2str(110)],'param')
+cd(code_folder)
