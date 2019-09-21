@@ -28,7 +28,7 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 4
+for n_MU = 110
     n_MU
     index_test = idx_new(n_MU);
     MDR_d = MDR(idx(n_MU))
@@ -53,8 +53,8 @@ for n_MU = 4
     
     %%
     param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-    param.g_Kf = 4; %mnParameter.g_Kf(n_MU); %*param_s.area_s ; %(mS/cm^2)
-    param.g_Ks = 16; %mnParameter.g_Ks(n_MU); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Kf = 0.5; %mnParameter.g_Kf(n_MU); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Ks = 4; %mnParameter.g_Ks(n_MU); %*param_s.area_s ; %(mS/cm^2)
     param.g_c = 0.1;
     %%
     param.alpha_m = 22*1000;
@@ -64,7 +64,7 @@ for n_MU = 4
     param.alpha_n = 1.5*1000;
     param.beta_n = 0.1*1000;
     param.alpha_q = 1.5*1000;
-    param.beta_q = 0.025*1000; %mnParameter.beta_q(n_MU);
+    param.beta_q = 0.1*1000; %mnParameter.beta_q(n_MU);
     
     
     %%
@@ -111,6 +111,7 @@ for n_MU = 4
         
         if error > 0
             param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(k-2);
+            param.beta_q = param.beta_q + (param.beta_q*perturbation_amp)./2.^(k-2);
             param.beta_q = param.beta_q + (param.beta_q*perturbation_amp)./2.^(k-2);
         else
             param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);

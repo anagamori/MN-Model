@@ -16,3 +16,4 @@ test_recruitment_threshold.m
 
 %% Fit model parameters to adjust minimal discharge rate to the deisred value
 MDR_fit.m
+MDR_fit_v2.m % for fast-twitch unit

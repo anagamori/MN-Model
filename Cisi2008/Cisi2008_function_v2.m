@@ -205,7 +205,7 @@ end
         %%
         if inputOpt == 1
             dx = 1/param_s.C_m*(-I_Na - I_Kf - I_Ks ...
-                - I_l - I_c + param_s.area_s*I_app)*1000; %- I_c
+                - I_l - I_c + I_app)*1000; %- I_c
         else
             dx = 1/param_s.C_m*(-I_Na - I_Kf - I_Ks...
                 - I_l - I_c)*1000; %
@@ -222,7 +222,7 @@ end
         if inputOpt == 1
             dx = 1/param_d.C_m*(- I_l - I_c)*1000; % - I_c
         else
-            dx = 1/param_d.C_m*(- I_l - I_c + param_d.area_d*I_app)*1000; %- I_c
+            dx = 1/param_d.C_m*(- I_l - I_c + I_app)*1000; %- I_c
         end
         
     end

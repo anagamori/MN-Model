@@ -1,5 +1,5 @@
 %==========================================================================
-% MDR_fit.m
+% MDR_fit_v2.m
 % Author: Akira Nagamori
 % Last update: 9/20/19
 % Descriptions:
@@ -24,12 +24,17 @@ load('MDR')
 load('modelParameter')
 load('current_th')
 load('min_DR')
+load('error_vec')
 cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 92
-    n_MU
+temp = find(error_vec>1);
+temp(temp<78) = [];
+temp(([8 12 19 13])) = [];
+
+for n_MU = 1:length(temp)
+    n_MU = temp(n_MU)
     index_test = idx_new(n_MU);
     MDR_d = MDR(idx(n_MU))
     
