@@ -28,10 +28,10 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 2
+for n_MU = 3
     n_MU
     index_test = idx_new(n_MU);
-    MDR(idx(n_MU))
+    MDR_d = MDR(idx(n_MU))
     
     %% Geometric parameters
     param.C_m = 3; %[microF/cm^2]
@@ -70,8 +70,9 @@ for n_MU = 2
     %%
     threshold = current_th(n_MU);
     amp_vec = -2+threshold:0.01:threshold+2;
-    perturbation_amp = 0.3;
+    perturbation_amp = 0.2;
     %%
+    tic
     for k = 1:5
         k
         mean_FR = zeros(1,length(amp_vec));
@@ -80,7 +81,6 @@ for n_MU = 2
         Fs = 10000;
         time = 0:1/Fs:5;
         noise_amp = 0;
-        tic
         parfor i = 1:length(amp_vec)
                   
             amp = amp_vec(i);
@@ -100,7 +100,6 @@ for n_MU = 2
             mean_FR(n) = mean(1./ISI*1000);
             CoV_FR(n) = std(1./ISI*1000)/mean_FR(n)*100;
         end
-        toc
         %%
         index_t = find(~isnan(mean_FR));
         area_s = param.area_s;
@@ -112,8 +111,10 @@ for n_MU = 2
         
         if error > 0
             param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(k-2);
+            param.beta_q = param.beta_q + (param.beta_q*perturbation_amp)./2.^(k-2);
         else
             param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);
+            param.beta_q = param.beta_q - (param.beta_q*perturbation_amp)./2.^(k-2);
         end
         
         p_fit = polyfit(amp_vec(index_t)*area_s*10^3,mean_FR(index_t),1);
@@ -128,7 +129,7 @@ for n_MU = 2
         set(gca,'TickDir','out');
         set(gca,'box','off')
     end
-    
+    toc
     %current_th_new
     min_DR_new
     error
