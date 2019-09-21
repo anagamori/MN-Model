@@ -41,7 +41,7 @@ mnParameter.beta_h = 4*1000;
 mnParameter.alpha_n = 1.5*1000;
 mnParameter.beta_n = 0.1*1000;
 mnParameter.alpha_q = 1.5*1000;
-mnParameter.beta_q = [0.025*1000*ones(index_slow,1);0.1*ones(N_MU-index_slow,1)];
+mnParameter.beta_q = [0.025*1000*ones(index_slow,1);0.1*1000*ones(N_MU-index_slow,1)];
 
 %% Save model parameters
 cd(data_folder)

@@ -21,7 +21,7 @@ load('current_th')
 load('min_DR')
 cd(code_folder)
 n_MU = 120;
-for j = 62:n_MU
+for j = 1:n_MU
     j
     %% Geometric parameters
     param.C_m = 3; %[microF/cm^2]
@@ -62,7 +62,7 @@ for j = 62:n_MU
     time = 0:1/Fs:5;
     noise_amp = 0;
         
-    amp_vec = 50:0.1:100;
+    amp_vec = 0:1:130;
     amp_vec = amp_vec.*10^-3;
     mean_FR = zeros(1,length(amp_vec));
     CoV_FR = zeros(1,length(amp_vec));

@@ -28,9 +28,9 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 92
+for n_MU = 1:120
     n_MU
-    index_test = idx_new(n_MU);
+    index_test = n_MU;
     MDR_d = MDR(idx(n_MU))
     
     %% Geometric parameters
@@ -53,8 +53,8 @@ for n_MU = 92
     
     %%
     param.g_Na = 30; %*param_s.area_s ; %(mS/cm^2)
-    param.g_Kf = 0.5; %mnParameter.g_Kf(n_MU); %*param_s.area_s ; %(mS/cm^2)
-    param.g_Ks = 4; %mnParameter.g_Ks(n_MU); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Kf = mnParameter.g_Kf(n_MU); %*param_s.area_s ; %(mS/cm^2)
+    param.g_Ks = mnParameter.g_Ks(n_MU); %*param_s.area_s ; %(mS/cm^2)
     param.g_c = 0.1;
     %%
     param.alpha_m = 22*1000;
@@ -64,12 +64,13 @@ for n_MU = 92
     param.alpha_n = 1.5*1000;
     param.beta_n = 0.1*1000;
     param.alpha_q = 1.5*1000;
-    param.beta_q = 0.1*1000; %mnParameter.beta_q(n_MU);
+    param.beta_q = mnParameter.beta_q(n_MU);
     
     
     %%
     threshold = current_th(n_MU);
-    amp_vec = -2+threshold:0.01:threshold+2;
+    amp_vec = -2e-3+threshold:0.01e-3:threshold+2e-3;
+  
     perturbation_amp = 0.1;
     %%
     tic
@@ -119,7 +120,7 @@ for n_MU = 92
             param.beta_q = param.beta_q - (param.beta_q*perturbation_amp)./2.^(k-2);
         end
         
-        p_fit = polyfit(amp_vec(index_t)*area_s*10^3,mean_FR(index_t),1);
+        p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);
         y1 = polyval(p_fit,amp_vec(index_t));
         
         figure(1)
