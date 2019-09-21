@@ -28,7 +28,7 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 1:120
+for n_MU = 2
     n_MU
     index_test = idx_new(n_MU);
     MDR(idx(n_MU))
@@ -70,7 +70,7 @@ for n_MU = 1:120
     %%
     threshold = current_th(n_MU);
     amp_vec = -2+threshold:0.01:threshold+2;
-    perturbation_amp = 0.4;
+    perturbation_amp = 0.3;
     %%
     for k = 1:5
         k
@@ -129,8 +129,9 @@ for n_MU = 1:120
         set(gca,'box','off')
     end
     
-    current_th_new
+    %current_th_new
     min_DR_new
+    error
     min_DR_update(n_MU) = min_DR_new;
     %end
     cd(data_folder)
