@@ -28,7 +28,7 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 3
+for n_MU = 4:120
     n_MU
     index_test = idx_new(n_MU);
     MDR_d = MDR(idx(n_MU))
