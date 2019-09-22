@@ -71,7 +71,7 @@ for n_MU = 2
     threshold = current_th(n_MU);
     amp_vec = -1e-3+threshold:0.01e-3:threshold+1e-3;
   
-    perturbation_amp = 0.2;
+    perturbation_amp = 0.3;
     %%
     tic
     for k = 1:5
@@ -109,18 +109,18 @@ for n_MU = 2
         min_DR_new = mean_FR(index_t(1));
         
         error = MDR(idx(n_MU)) - min_DR_new;
-        
-        if error > 0
-            param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(k-2);
-            param.alpha_q = param.alpha_q - (param.alpha_q*0.05)./2.^(k-2);
-            param.beta_q = param.beta_q + (param.beta_q*perturbation_amp)./2.^(k-2);
-        else
-            param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);
-            param.alpha_q = param.alpha_q + (param.alpha_q*0.05)./2.^(k-2);
-            param.beta_q = param.beta_q - (param.beta_q*perturbation_amp)./2.^(k-2);
+        if k < 5
+            if error > 0
+                param.g_Ks = param.g_Ks - (param.g_Ks*perturbation_amp)./2.^(k-2);
+                param.alpha_q = param.alpha_q - (param.alpha_q*0.05)./2.^(k-2);
+                param.beta_q = param.beta_q + (param.beta_q*perturbation_amp)./2.^(k-2);
+            else
+                param.g_Ks = param.g_Ks + (param.g_Ks*perturbation_amp)./2.^(k-2);
+                param.alpha_q = param.alpha_q + (param.alpha_q*0.05)./2.^(k-2);
+                param.beta_q = param.beta_q - (param.beta_q*perturbation_amp)./2.^(k-2);
+            end
         end
-        
-        p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1)
+        p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);
         y1 = polyval(p_fit,amp_vec(index_t));
         
         figure(1)
