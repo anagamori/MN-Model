@@ -52,7 +52,7 @@ noise_amp = 0;
 
 %% Test input resistance
 % Methods (Zengel et al. 1985)
-amp = 7.5e-3; %current_th(n_MU);
+amp = current_th(n_MU);
 input  = zeros(1,length(time));
 input(1*Fs+1:end) = amp;
 
