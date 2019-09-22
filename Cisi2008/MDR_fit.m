@@ -28,7 +28,7 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 1:120
+for n_MU = 2
     n_MU
     index_test = n_MU;
     MDR_d = MDR(idx(n_MU))
@@ -69,9 +69,9 @@ for n_MU = 1:120
     
     %%
     threshold = current_th(n_MU);
-    amp_vec = -2e-3+threshold:0.01e-3:threshold+2e-3;
+    amp_vec = -1e-3+threshold:0.01e-3:threshold+1e-3;
   
-    perturbation_amp = 0.1;
+    perturbation_amp = 0.2;
     %%
     tic
     for k = 1:5
@@ -120,7 +120,7 @@ for n_MU = 1:120
             param.beta_q = param.beta_q - (param.beta_q*perturbation_amp)./2.^(k-2);
         end
         
-        p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);
+        p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1)
         y1 = polyval(p_fit,amp_vec(index_t));
         
         figure(1)
