@@ -28,7 +28,7 @@ cd(code_folder)
 [out,idx] = sort(modelParameter.U_th);
 [out_new,idx_new] = sort(current_th);
 
-for n_MU = 2
+for n_MU = 1:120
     n_MU
     index_test = n_MU;
     MDR_d = MDR(idx(n_MU))
@@ -69,9 +69,13 @@ for n_MU = 2
     
     %%
     threshold = current_th(n_MU);
-    amp_vec = -1e-3+threshold:0.01e-3:threshold+1e-3;
-  
-    perturbation_amp = 0.3;
+    amp_vec = -1e-3+threshold:0.01e-3:threshold;
+    
+    if n_MU <= 78
+        perturbation_amp = 0.3;
+    else
+        perturbation_amp = 0.1;
+    end
     %%
     tic
     for k = 1:5
@@ -134,12 +138,19 @@ for n_MU = 2
     end
     toc
     %current_th_new
-    min_DR_new
+    current_th(n_MU) = current_th_new;
     error
-    min_DR_update(n_MU) = min_DR_new;
+    min_DR(n_MU) = min_DR_new;
+    error_vec(n_MU) = error;
     %end
     cd(data_folder)
     save(['MN_' num2str(n_MU)],'param')
     cd(code_folder)
     
 end
+
+cd(data_folder)
+save('current_th','current_th')
+save('min_DR','min_DR')
+save('error_vec','error_vec')
+cd(code_folder)
