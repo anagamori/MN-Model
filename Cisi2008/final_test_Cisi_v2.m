@@ -73,7 +73,7 @@ for n_MU = 1:120
     current_th_new = amp_vec(index_t(1))
     min_DR_new = mean_FR(index_t(1))
     p_fit = polyfit(amp_vec(index_t),mean_FR(index_t),1);    
-    f_I_slope(n_MU = p_fit(1)*10^-3;
+    f_I_slope(n_MU) = p_fit(1)*10^-3;
     y1 = polyval(p_fit,amp_vec(index_t));
     
     peak_DR = min_DR_new*4;
