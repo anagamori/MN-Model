@@ -17,9 +17,5 @@ test_recruitment_threshold.m
 %% Fit model parameters to adjust minimal discharge rate to the deisred value
 MDR_fit.m
 
-%% Generate a strcture variable, mn_parameter, to run a population MN model
-mn_parameter_pool.m
+%% Generate a 
 
-%% Test the MN population model
-test_MN_model_population.m % the code that runs the model
-MN_model_population.m % function for the model

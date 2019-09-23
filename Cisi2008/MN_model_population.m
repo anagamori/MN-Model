@@ -1,0 +1,206 @@
+%==========================================================================
+% MN_model_population.m
+% Author: Akira Nagamori
+% Last update: 9/22/19
+% Descriptions:
+%   - Input: a 1-dimentional synaptic input (U_syn)
+%               a N by M MN parameter matrix (mnMatrix) (see parameter_matrix.m)
+%   - Output: a N-dimentional binary spike trains (spike)
+%   - N = the number of MUs in a pool
+%   
+%==========================================================================
+
+function [binary,V_s_mat,V_d_mat] = MN_model_population(mn_parameter,time,U_syn,Fs,noise_amp,inputOpt)
+
+step = 1/Fs;
+
+%%
+N_MU = length(mn_parameter.area_s);
+%% Geometric parameters
+param_s.area_s = mn_parameter.area_s; % the surface area of soma
+param_d.area_d = param_s.area_s*mn_parameter.q; % the surface area of dendrite
+
+p = 1./(1+mn_parameter.q); % the ratio of somatic surface area to total cell surface area
+%% Dendtritic parameters
+param_d.V_l = mn_parameter.V_l; %(mV)
+
+param_d.g_c = mn_parameter.g_c*param_d.area_d; %2/((param.R_i*param.l_d/(pi*param.r_d^2))+(param.R_i*param.l_s/(pi*param.r_s^2)));
+param_d.g_l = param_d.area_d./mn_parameter.R_m_d;
+param_d.C_m = mn_parameter.C_m*param_d.area_d;
+param_d.p = p; % the ratio of somatic surface area to total cell surface area
+%% Somatic parameters
+param_s.V_Na = mn_parameter.V_Na; %(mV)
+param_s.V_K = mn_parameter.V_K; %(mV)
+param_s.V_l = mn_parameter.V_l; %(mV)
+
+param_s.g_Na = mn_parameter.g_Na.*param_s.area_s ; %(mS)
+param_s.g_Kf = mn_parameter.g_Kf.*param_s.area_s ; %(mS)
+param_s.g_Ks = mn_parameter.g_Ks.*param_s.area_s ; %(mS)
+param_s.g_c = mn_parameter.g_c.*param_s.area_s;
+param_s.g_l = param_s.area_s./mn_parameter.R_m_s;
+param_s.p = p;
+param_s.C_m = mn_parameter.C_m.*param_s.area_s;
+
+param_s.V_th = (mn_parameter.R_m_s*10^3)./param_s.area_s.*mn_parameter.I_r;
+param_s.V_th = param_s.V_th.*10^3;
+
+%%
+I_min = mn_parameter.I_min;
+I_max = mn_parameter.I_max;
+U_th = mn_parameter.U_th;
+%%
+V_s = zeros(N_MU,1);
+V_d = zeros(N_MU,1);
+
+m = zeros(N_MU,1);
+h = ones(N_MU,1);
+n = zeros(N_MU,1);
+q = zeros(N_MU,1);
+
+m_0 = zeros(N_MU,1);
+h_0 = ones(N_MU,1);
+n_0 = zeros(N_MU,1);
+q_0 = zeros(N_MU,1);
+%%
+chi = normrnd(0,1,[N_MU,length(time)]);
+%%
+V_s_mat =  zeros(N_MU,length(time));
+V_d_mat =  zeros(N_MU,length(time));
+m_vec =  zeros(N_MU,length(time));
+h_vec =  zeros(N_MU,length(time));
+n_vec =  zeros(N_MU,length(time));
+q_vec =  zeros(N_MU,length(time));
+
+binary = zeros(N_MU,length(time));
+
+I_noise = zeros(N_MU,1);
+I_noise_vec = zeros(N_MU,length(time));
+
+I_eff_vec = zeros(N_MU,length(time));
+
+index_s = zeros(N_MU,length(time));
+
+t_0_start = zeros(N_MU,length(time));
+t_0_end = zeros(N_MU,length(time));
+%%
+for t = 1:length(time)
+  
+    [I_noise] = noise(I_noise,noise_amp,chi(:,t),Fs);
+    I_eff = (I_max-I_min)./(1-U_th).*(U_syn(t)-U_th) + I_min;
+    I_eff = I_eff + I_eff.*I_noise; % + input(t)*sum(x_noise);
+    V_s_m1 = V_s;
+
+    %%
+    k_1_s = f_dV_s(V_s,V_d,m,h,n,q,param_s,I_eff,inputOpt);
+    y_1_s = V_s + k_1_s*step/2;
+    k_2_s = f_dV_s(y_1_s,V_d,m,h,n,q,param_s,I_eff,inputOpt);
+    y_2_s = V_s + k_2_s*step/2;
+    k_3_s = f_dV_s(y_2_s,V_d,m,h,n,q,param_s,I_eff,inputOpt);
+    y_3_s = V_s + k_3_s*step/2;
+    k_4_s = f_dV_s(y_3_s,V_d,m,h,n,q,param_s,I_eff,inputOpt);
+    V_s = V_s + step/6*(k_1_s+2*k_2_s+2*k_3_s+k_4_s);
+
+    %%
+    k_1_d = f_dV_d(V_d,V_s,param_d,I_eff,inputOpt);
+    y_1_d = V_d + k_1_d*step/2;
+    k_2_d = f_dV_d(y_1_d,V_s,param_d,I_eff,inputOpt);
+    y_2_d = V_d + k_2_d*step/2;
+    k_3_d = f_dV_d(y_2_d,V_s,param_d,I_eff,inputOpt);
+    y_3_d = V_d + k_3_d*step/2;
+    k_4_d = f_dV_d(y_3_d,V_s,param_d,I_eff,inputOpt);
+    V_d = V_d + step/6*(k_1_d+2*k_2_d+2*k_3_d+k_4_d);
+    
+    %% Spike detection
+    index_spike = find(V_s_m1 < param_s.V_th  & V_s >= param_s.V_th);
+    binary(index_spike,t) = 1;
+    index_s(index_spike,t:t+round(0.0006*Fs)) = 1; % pulse (duration of 0.6 ms)
+    
+    %% State variables for ionic conductances
+    if t > 1
+        T = t/Fs;
+        
+        % when the voltage crosses the threhold, record the start time and
+        % initial time of the pulse
+        t_0_start(index_spike) = t/Fs;
+        t_0_end(index_spike) = (t+round(0.0006*Fs))/Fs;
+        % reset x_0 of state variables 
+        m_0(index_spike) = m(index_spike);
+        h_0(index_spike) = h(index_spike);
+        n_0(index_spike) = n(index_spike);
+        q_0(index_spike) = q(index_spike);
+         
+        index_end = find(index_s(:,t) == 0 & index_s(:,t-1) == 1);
+        m_0(index_end)  = m(index_end);
+        h_0(index_end) = h(index_end);
+        n_0(index_end) = n(index_end);
+        q_0(index_end) = q(index_end);
+        
+        index_on = find(index_s(:,t) == 1);
+        m(index_on) = 1 + (m_0(index_on)-1).*exp(-mn_parameter.alpha_m.*(T-t_0_start(index_on)));
+        h(index_on) = h_0(index_on).*exp(-mn_parameter.beta_h.*(T-t_0_start(index_on)));
+        n(index_on) = 1 + (n_0(index_on)-1).*exp(-mn_parameter.alpha_n.*(T-t_0_start(index_on)));
+        q(index_on) = 1 + (q_0(index_on)-1).*exp(-mn_parameter.alpha_q(index_on).*(T-t_0_start(index_on)));
+            
+        index_off = find(index_s(:,t) == 0);
+
+        m(index_off) = m_0(index_off).*exp(-mn_parameter.beta_m.*(T-t_0_end(index_off)));
+        h(index_off) = 1 + (h_0(index_off)-1).*exp(-mn_parameter.alpha_h.*(T-t_0_end(index_off)));
+        n(index_off) = n_0(index_off).*exp(-mn_parameter.beta_n.*(T-t_0_end(index_off)));
+        q(index_off) = q_0(index_off).*exp(-mn_parameter.beta_q(index_off).*(T-t_0_end(index_off)));
+ 
+    end
+    V_s_mat(:,t) = V_s;
+    V_d_mat(:,t) = V_d;
+    m_vec(:,t) =  m;
+    h_vec(:,t) =  h;
+    n_vec(:,t) =  n;
+    q_vec(:,t) =  q;
+    
+    I_noise_vec(:,t) = I_noise;
+    
+    I_eff_vec(:,t) = I_eff;
+    
+end
+
+
+
+    function dx = f_dV_s(V_s,V_d,m,h,n,q,param_s,I_eff,inputOpt)
+        %%
+        I_Na = param_s.g_Na.*m.^3.*h.*(V_s-param_s.V_Na); % sodium conductance
+        I_Kf = param_s.g_Kf.*n.^4.*(V_s-param_s.V_K); %  potassium delayed rectifier
+        I_Ks = param_s.g_Ks.*q.^2.*(V_s-param_s.V_K); %  potassium delayed rectifier
+        I_l = param_s. g_l.*(V_s-param_s.V_l); % leak conductance
+        I_c = param_s.g_c./param_s.p.*(V_s-V_d);
+
+        %%
+        if inputOpt == 1
+            dx = 1./param_s.C_m.*(-I_Na - I_Kf - I_Ks ...
+                - I_l - I_c + I_eff)*1000; %- I_c
+        else
+            dx = 1./param_s.C_m.*(-I_Na - I_Kf - I_Ks...
+                - I_l - I_c)*1000; %
+        end
+
+    end
+
+    function dx = f_dV_d(V_d,V_s,param_d,I_eff,inputOpt)
+        
+        %%
+        I_l = param_d.g_l.*(V_d-param_d.V_l);
+        I_c = param_d.g_c./(1-param_d.p).*(V_d-V_s);
+        
+        %%
+        if inputOpt == 1
+            dx = 1./param_d.C_m.*(- I_l - I_c)*1000; % - I_c
+        else
+            dx = 1./param_d.C_m.*(- I_l - I_c + I_eff)*1000; %- I_c
+        end
+        
+    end
+
+    function [x] = noise(x,D,chi,Fs)
+        tau = 0.005;
+        x_dot = -x./tau + sqrt(D)*chi;
+        x = x_dot*1./Fs + x;
+    end
+end
